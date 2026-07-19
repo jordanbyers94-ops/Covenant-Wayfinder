@@ -101,51 +101,6 @@
   min-height: 580px;
 }
 
-@media (max-width: 720px) {
-  .cc-root { border-radius: 0; overflow: visible; min-height: 0; }
-  .cc-header { flex-direction: column; align-items: flex-start; gap: 6px; padding: 16px 16px 14px; }
-  .cc-header-right { text-align: left; max-width: none; }
-  .cc-title { font-size: 23px; }
-
-  .cc-layout { grid-template-columns: 1fr; }
-  .cc-main { order: 1; padding: 18px 16px 24px; max-height: none; overflow-y: visible; }
-  .cc-sidebar {
-    order: 2;
-    border-right: none;
-    border-top: 1px solid var(--line);
-    border-bottom: none;
-    padding: 18px 16px;
-  }
-
-  #ccChipList { max-height: 200px; overflow-y: auto; border: 1px solid var(--line); border-radius: 8px; padding: 6px; }
-
-  .cc-verse-text { font-size: 21px; }
-  .cc-thread-wrap { gap: 16px; }
-  .cc-thread-svg-box { max-width: 100%; flex: 1 1 auto; }
-  #ccThreadSvg { width: 100%; height: auto; max-width: 320px; display: block; }
-
-  .cc-explain-card { padding: 13px 15px; }
-
-  /* 16px min font-size on inputs prevents iOS Safari auto-zoom on focus */
-  .cc-search input,
-  .cc-search button,
-  .cc-situation-block textarea,
-  .cc-situation-btn,
-  .cc-translation-select,
-  .cc-path-step { font-size: 16px; }
-
-  /* comfortable tap targets */
-  .cc-search input, .cc-search button, .cc-situation-btn, .cc-translation-select {
-    min-height: 44px;
-  }
-}
-
-@media (max-width: 420px) {
-  .cc-title { font-size: 20px; }
-  .cc-verse-text { font-size: 19px; }
-  .cc-explain-card p { font-size: 14px; }
-}
-
 .cc-sidebar {
   border-right: 1px solid var(--line);
   padding: 20px;
@@ -484,6 +439,51 @@
   border-radius: 6px;
   padding: 12px 14px;
 }
+@media (max-width: 720px) {
+  .cc-root { border-radius: 0; overflow: visible; min-height: 0; }
+  .cc-header { flex-direction: column; align-items: flex-start; gap: 6px; padding: 16px 16px 14px; }
+  .cc-header-right { text-align: left; max-width: none; }
+  .cc-title { font-size: 23px; }
+
+  .cc-layout { grid-template-columns: 1fr; }
+  .cc-main { order: 1; padding: 18px 16px 24px; max-height: none; overflow-y: visible; }
+  .cc-sidebar {
+    order: 2;
+    border-right: none;
+    border-top: 1px solid var(--line);
+    border-bottom: none;
+    padding: 18px 16px;
+  }
+
+  #ccChipList { max-height: 200px; overflow-y: auto; border: 1px solid var(--line); border-radius: 8px; padding: 6px; }
+
+  .cc-verse-text { font-size: 21px; }
+  .cc-thread-wrap { gap: 16px; }
+  .cc-thread-svg-box { max-width: 100%; flex: 1 1 auto; }
+  #ccThreadSvg { width: 100%; height: auto; max-width: 320px; display: block; }
+
+  .cc-explain-card { padding: 13px 15px; }
+
+  /* 16px min font-size on inputs prevents iOS Safari auto-zoom on focus */
+  .cc-search input,
+  .cc-search button,
+  .cc-situation-block textarea,
+  .cc-situation-btn,
+  .cc-translation-select,
+  .cc-path-step { font-size: 16px; }
+
+  /* comfortable tap targets */
+  .cc-search input, .cc-search button, .cc-situation-btn, .cc-translation-select {
+    min-height: 44px;
+  }
+}
+
+@media (max-width: 420px) {
+  .cc-title { font-size: 20px; }
+  .cc-verse-text { font-size: 19px; }
+  .cc-explain-card p { font-size: 14px; }
+}
+
 </style>
 
 <div class="cc-root">
