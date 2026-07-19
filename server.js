@@ -121,6 +121,43 @@ app.get('/api/health', (req, res) => {
   res.json({ ok: true, keyConfigured: !!ANTHROPIC_API_KEY, model: MODEL });
 });
 
+// Full-Bible verse lookup for anything outside the curated library.
+// Backed by bible-api.com — free, no key required, public-domain translations only.
+const verseCache = new Map();
+
+app.get('/api/verse', async (req, res) => {
+  try {
+    const ref = (req.query.ref || '').trim();
+    const translation = (req.query.translation || 'kjv').toLowerCase();
+    if (!ref) return res.status(400).json({ error: 'Missing "ref" query parameter' });
+
+    const cacheKey = `${translation}:${ref.toLowerCase()}`;
+    if (verseCache.has(cacheKey)) {
+      return res.json(verseCache.get(cacheKey));
+    }
+
+    const url = `https://bible-api.com/${encodeURIComponent(ref)}?translation=${encodeURIComponent(translation)}`;
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`bible-api.com returned ${response.status}`);
+    }
+    const data = await response.json();
+    if (data.error) throw new Error(data.error);
+    if (!data.text) throw new Error('No text returned for that reference');
+
+    const result = {
+      ref: data.reference || ref,
+      text: data.text.trim().replace(/\s+/g, ' '),
+      translation: data.translation_name || translation.toUpperCase()
+    };
+    verseCache.set(cacheKey, result);
+    res.json(result);
+  } catch (err) {
+    console.error('[/api/verse]', err.message);
+    res.status(502).json({ error: err.message || 'Unknown error fetching verse' });
+  }
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`Concord server running on port ${PORT}`);
