@@ -138,6 +138,31 @@
   margin-bottom: 16px;
 }
 
+.cc-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid var(--line);
+}
+.cc-tab {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 8px 4px 10px;
+  border: none;
+  background: transparent;
+  color: var(--ink-soft);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+.cc-tab:hover { color: var(--ink); }
+.cc-tab.active { color: var(--gold); border-bottom-color: var(--gold); }
+.cc-tab:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.cc-tab-panel { display: none; }
+.cc-tab-panel.active { display: block; }
+
 .cc-search {
   display: flex;
   gap: 6px;
@@ -509,13 +534,22 @@
         <div id="ccPathTrack" class="cc-path-track"></div>
       </div>
 
-      <div class="cc-search">
-        <input id="ccSearchInput" type="text" placeholder="e.g. Romans 8:28" list="ccRefList" />
-        <button id="ccSearchBtn">Go</button>
+      <div class="cc-tabs" role="tablist">
+        <button class="cc-tab active" data-tab="search" role="tab" aria-selected="true">Search</button>
+        <button class="cc-tab" data-tab="popular" role="tab" aria-selected="false">Popular</button>
       </div>
-      <datalist id="ccRefList"></datalist>
-      <div class="cc-side-label">Popular Passages</div>
-      <div id="ccChipList"></div>
+
+      <div id="ccTabPanelSearch" class="cc-tab-panel active">
+        <div class="cc-search">
+          <input id="ccSearchInput" type="text" placeholder="e.g. Romans 8:28" list="ccRefList" />
+          <button id="ccSearchBtn">Go</button>
+        </div>
+        <datalist id="ccRefList"></datalist>
+      </div>
+
+      <div id="ccTabPanelPopular" class="cc-tab-panel">
+        <div id="ccChipList"></div>
+      </div>
     </div>
 
     <div class="cc-main">
@@ -818,6 +852,25 @@
   const situationBtn = document.getElementById('ccSituationBtn');
   const pathTrack = document.getElementById('ccPathTrack');
   const translationSelect = document.getElementById('ccTranslationSelect');
+  const tabButtons = document.querySelectorAll('.cc-tab');
+  const tabPanels = {
+    search: document.getElementById('ccTabPanelSearch'),
+    popular: document.getElementById('ccTabPanelPopular')
+  };
+
+  tabButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const target = btn.dataset.tab;
+      tabButtons.forEach(b => {
+        const isActive = b === btn;
+        b.classList.toggle('active', isActive);
+        b.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      });
+      Object.entries(tabPanels).forEach(([key, panel]) => {
+        panel.classList.toggle('active', key === target);
+      });
+    });
+  });
 
   let currentRef = null;
   let currentPath = null;      // [{ref, reason}, ...] when in situational mode
