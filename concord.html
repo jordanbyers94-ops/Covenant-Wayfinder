@@ -1,0 +1,897 @@
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+.cc-root {
+  --ink: #efe9da;
+  --ink-soft: #a89c86;
+  --parchment: #141311;
+  --parchment-deep: #1c1a17;
+  --panel: #1e1c18;
+  --oxblood: #b2452f;
+  --oxblood-soft: #c96a4f;
+  --gold: #c9b896;
+  --sage: #8a9578;
+  --line: #38352d;
+  --font-display: 'Oswald', sans-serif;
+  --font-verse: 'Fraunces', serif;
+  --font-body: 'Source Serif 4', serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  background: var(--parchment);
+  color: var(--ink);
+  font-family: var(--font-body);
+  border-radius: 14px;
+  padding: 0;
+  overflow: hidden;
+  min-height: 640px;
+  background-image:
+    radial-gradient(circle at 15% 10%, rgba(201,184,150,0.05), transparent 40%),
+    radial-gradient(circle at 85% 85%, rgba(178,69,47,0.07), transparent 45%);
+}
+
+.cc-root * { box-sizing: border-box; }
+
+.cc-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 22px 28px 16px;
+  border-bottom: 1px solid var(--line);
+}
+.cc-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 500;
+}
+.cc-title {
+  font-family: var(--font-display);
+  font-size: 30px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  margin-top: 2px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.cc-title-cross {
+  display: inline-block;
+  width: 14px;
+  height: 18px;
+  flex-shrink: 0;
+}
+.cc-tagline {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-top: 4px;
+}
+.cc-header-right {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-soft);
+  text-align: right;
+  max-width: 220px;
+  line-height: 1.5;
+}
+
+.cc-layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  min-height: 580px;
+}
+@media (max-width: 720px) {
+  .cc-layout { grid-template-columns: 1fr; }
+  .cc-sidebar { border-right: none; border-bottom: 1px solid var(--line); }
+}
+
+.cc-sidebar {
+  border-right: 1px solid var(--line);
+  padding: 20px;
+  background: rgba(255,255,255,0.15);
+}
+.cc-translation-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+.cc-translation-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.cc-translation-select {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--panel);
+  color: var(--ink);
+  cursor: pointer;
+}
+.cc-translation-select:focus-visible { outline: 2px solid var(--gold); outline-offset: 1px; }
+.cc-translation-note {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--oxblood-soft);
+  margin-top: -10px;
+  margin-bottom: 16px;
+}
+
+.cc-search {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 18px;
+}
+.cc-search input {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--font-body);
+  font-size: 14px;
+  padding: 9px 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--panel);
+  color: var(--ink);
+}
+.cc-search input:focus {
+  outline: 2px solid var(--gold);
+  outline-offset: 1px;
+}
+.cc-search button {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  padding: 0 12px;
+  border: 1px solid var(--ink);
+  background: var(--ink);
+  color: var(--parchment);
+  border-radius: 6px;
+  cursor: pointer;
+}
+.cc-search button:hover { background: var(--oxblood); border-color: var(--oxblood); }
+.cc-search button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+.cc-situation-block {
+  margin-bottom: 22px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--line);
+}
+.cc-situation-block textarea {
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: 13.5px;
+  line-height: 1.5;
+  padding: 9px 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--panel);
+  color: var(--ink);
+  resize: vertical;
+  min-height: 64px;
+  margin-bottom: 8px;
+}
+.cc-situation-block textarea:focus {
+  outline: 2px solid var(--sage);
+  outline-offset: 1px;
+}
+.cc-situation-btn {
+  width: 100%;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  padding: 9px 12px;
+  border: 1px solid var(--sage);
+  background: var(--sage);
+  color: var(--panel);
+  border-radius: 6px;
+  cursor: pointer;
+}
+.cc-situation-btn:hover { background: #3d4834; }
+.cc-situation-btn:disabled { opacity: 0.55; cursor: default; }
+.cc-situation-btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.cc-situation-hint {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--ink-soft);
+  margin-top: 6px;
+  line-height: 1.5;
+}
+.cc-path-track {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.cc-path-step {
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  padding: 6px 8px;
+  border-radius: 5px;
+  border: 1px solid transparent;
+  color: var(--ink-soft);
+  cursor: pointer;
+  text-align: left;
+  background: transparent;
+}
+.cc-path-step:hover { background: var(--panel); }
+.cc-path-step.active { background: var(--panel); border-color: var(--sage); color: var(--ink); font-weight: 600; }
+.cc-path-step .cc-step-num { color: var(--sage); margin-right: 6px; }
+
+.cc-side-label {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin-bottom: 8px;
+}
+.cc-chip {
+  display: block;
+  width: 100%;
+  text-align: left;
+  font-family: var(--font-body);
+  font-size: 13px;
+  padding: 7px 9px;
+  margin-bottom: 4px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+.cc-chip:hover { background: var(--panel); color: var(--ink); }
+.cc-chip.active { background: var(--panel); color: var(--ink); border-color: var(--line); font-weight: 600; }
+.cc-chip:focus-visible { outline: 2px solid var(--gold); outline-offset: 1px; }
+
+.cc-main {
+  padding: 26px 32px 32px;
+  overflow-y: auto;
+  max-height: 700px;
+}
+
+.cc-verse-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  color: var(--oxblood);
+  border: 1px solid var(--oxblood);
+  padding: 3px 9px;
+  border-radius: 100px;
+  margin-bottom: 14px;
+}
+.cc-source-badge {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--sage);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.cc-source-badge.unverified { color: var(--oxblood-soft); }
+
+.cc-verse-text {
+  font-family: var(--font-verse);
+  font-size: 26px;
+  line-height: 1.5;
+  font-weight: 400;
+  color: var(--ink);
+  margin: 6px 0 8px;
+}
+.cc-verse-note {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-style: italic;
+  color: var(--ink-soft);
+  margin-bottom: 22px;
+}
+
+.cc-section-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin: 30px 0 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.cc-section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--line);
+}
+
+.cc-thread-wrap {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+.cc-thread-svg-box { flex: 0 0 auto; }
+.cc-legend {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 10px;
+}
+.cc-legend-row { display: flex; align-items: center; gap: 8px; }
+.cc-legend-swatch { width: 22px; height: 0; border-top: 2px solid var(--gold); }
+.cc-legend-swatch.ai { border-top: 2px dashed var(--oxblood-soft); }
+.cc-legend-swatch.situational { border-top: 2px dashed var(--sage); }
+
+.cc-reason-banner {
+  background: rgba(77,89,64,0.1);
+  border: 1px solid var(--sage);
+  border-radius: 8px;
+  padding: 14px 18px;
+  margin-bottom: 14px;
+}
+.cc-reason-banner h4 {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--sage);
+  margin: 0 0 6px;
+  font-weight: 600;
+}
+.cc-reason-banner p {
+  font-family: var(--font-body);
+  font-size: 14.5px;
+  line-height: 1.6;
+  color: var(--ink);
+  margin: 0;
+}
+
+.cc-node-label {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  fill: var(--ink);
+  cursor: pointer;
+}
+.cc-node-circle { cursor: pointer; transition: r 0.15s ease; }
+.cc-node-circle:hover { r: 7; }
+.cc-thread-path { fill: none; }
+
+.cc-explain-grid {
+  display: grid;
+  gap: 14px;
+  margin-top: 4px;
+}
+.cc-explain-card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 16px 18px;
+}
+.cc-explain-card h4 {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--oxblood);
+  margin: 0 0 8px;
+  font-weight: 600;
+}
+.cc-explain-card p {
+  font-family: var(--font-body);
+  font-size: 14.5px;
+  line-height: 1.65;
+  color: var(--ink);
+  margin: 0;
+}
+
+.cc-loading {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--ink-soft);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 20px 0;
+}
+.cc-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--gold);
+  animation: cc-pulse 1.1s infinite ease-in-out;
+}
+.cc-dot:nth-child(2) { animation-delay: 0.15s; }
+.cc-dot:nth-child(3) { animation-delay: 0.3s; }
+@keyframes cc-pulse { 0%,80%,100% { opacity: 0.25; } 40% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .cc-dot { animation: none; opacity: 0.6; }
+}
+
+.cc-error {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  color: var(--oxblood);
+  background: rgba(124,45,34,0.08);
+  border: 1px solid var(--oxblood-soft);
+  border-radius: 6px;
+  padding: 12px 14px;
+}
+</style>
+
+<div class="cc-root">
+  <div class="cc-header">
+    <div>
+      <div class="cc-eyebrow">Core Covenant</div>
+      <div class="cc-title">
+        <svg class="cc-title-cross" viewBox="0 0 14 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="5.5" y="0" width="3" height="18" fill="var(--gold)"/>
+          <rect x="0" y="5" width="14" height="3" fill="var(--gold)"/>
+        </svg>
+        Wayfinder
+      </div>
+      <div class="cc-tagline">Not Who I Was. Who I'm Becoming.</div>
+    </div>
+    <div class="cc-header-right">EST. 2026<br/>guided by the word</div>
+  </div>
+
+  <div class="cc-layout">
+    <div class="cc-sidebar">
+      <div class="cc-situation-block">
+        <div class="cc-side-label">Start From How You're Feeling</div>
+        <textarea id="ccSituationInput" placeholder="e.g. I feel like I'm failing as a dad and I'm stretched too thin at work"></textarea>
+        <button id="ccSituationBtn" class="cc-situation-btn">Find where to start</button>
+        <div class="cc-situation-hint">Claude picks a starting passage and a short path through scripture for what you described.</div>
+        <div id="ccPathTrack" class="cc-path-track"></div>
+      </div>
+
+      <div class="cc-search">
+        <input id="ccSearchInput" type="text" placeholder="e.g. Romans 8:28" list="ccRefList" />
+        <button id="ccSearchBtn">Go</button>
+      </div>
+      <datalist id="ccRefList"></datalist>
+      <div class="cc-side-label">Popular Passages</div>
+      <div id="ccChipList"></div>
+    </div>
+
+    <div class="cc-main">
+      <div class="cc-translation-row">
+        <span class="cc-translation-label">Translation</span>
+        <select id="ccTranslationSelect" class="cc-translation-select">
+          <option value="KJV">King James Version (1611)</option>
+          <option value="WEB">World English Bible (2020)</option>
+        </select>
+      </div>
+      <div id="ccVerseCard"></div>
+
+      <div class="cc-section-label">Thread Map</div>
+      <div class="cc-thread-wrap">
+        <div class="cc-thread-svg-box">
+          <svg id="ccThreadSvg" width="360" height="360" viewBox="0 0 360 360"></svg>
+        </div>
+        <div class="cc-legend">
+          <div class="cc-legend-row"><span class="cc-legend-swatch"></span> Curated cross-reference</div>
+          <div class="cc-legend-row"><span class="cc-legend-swatch ai"></span> AI-suggested — verify text yourself</div>
+          <div class="cc-legend-row"><span class="cc-legend-swatch situational"></span> Your guided path</div>
+          <div class="cc-legend-row" style="margin-top:6px;">Click any node to follow the thread.</div>
+        </div>
+      </div>
+
+      <div class="cc-section-label">Explanation</div>
+      <div id="ccExplanation"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(function() {
+  const TRANSLATIONS = {
+    KJV: { name: 'King James Version', year: '1611' },
+    WEB: { name: 'World English Bible', year: '2020' }
+  };
+
+  const LIBRARY = {
+    "Genesis 1:1": {
+      translations: {
+        KJV: "In the beginning God created the heaven and the earth.",
+        WEB: "In the beginning, God created the heavens and the earth."
+      },
+      refs: ["John 1:1-3", "Psalm 33:6", "Hebrews 11:3", "Colossians 1:16"]
+    },
+    "Psalm 23:1": {
+      translations: {
+        KJV: "The LORD is my shepherd; I shall not want."
+      },
+      refs: ["John 10:11", "Ezekiel 34:11-12", "Psalm 100:3", "Hebrews 13:20"]
+    },
+    "Psalm 46:1": {
+      translations: {
+        KJV: "God is our refuge and strength, a very present help in trouble."
+      },
+      refs: ["Psalm 91:1-2", "Isaiah 41:10", "Nahum 1:7", "Hebrews 4:16"]
+    },
+    "Proverbs 3:5-6": {
+      translations: {
+        KJV: "Trust in the LORD with all thine heart; and lean not unto thine own understanding. In all thy ways acknowledge him, and he shall direct thy paths.",
+        WEB: "Trust in the LORD with all your heart, and don't lean on your own understanding. In all your ways acknowledge him, and he will make your paths straight."
+      },
+      refs: ["Psalm 37:5", "Jeremiah 17:7-8", "Isaiah 55:8-9", "James 1:5"]
+    },
+    "Isaiah 40:31": {
+      translations: {
+        KJV: "But they that wait upon the LORD shall renew their strength; they shall mount up with wings as eagles; they shall run, and not be weary; and they shall walk, and not faint."
+      },
+      refs: ["Psalm 27:14", "2 Corinthians 4:16", "Habakkuk 3:19", "Galatians 6:9"]
+    },
+    "Jeremiah 29:11": {
+      translations: {
+        KJV: "For I know the thoughts that I think toward you, saith the LORD, thoughts of peace, and not of evil, to give you an expected end."
+      },
+      refs: ["Romans 8:28", "Proverbs 16:9", "Psalm 139:16", "Ephesians 2:10"]
+    },
+    "Matthew 6:33": {
+      translations: {
+        KJV: "But seek ye first the kingdom of God, and his righteousness; and all these things shall be added unto you."
+      },
+      refs: ["Luke 12:31", "Psalm 37:4", "Philippians 4:19", "1 Kings 3:13"]
+    },
+    "John 3:16": {
+      translations: {
+        KJV: "For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.",
+        WEB: "For God so loved the world, that he gave his only born Son, that whoever believes in him should not perish, but have eternal life."
+      },
+      refs: ["Romans 5:8", "1 John 4:9-10", "Romans 8:32", "John 1:12"]
+    },
+    "Romans 8:28": {
+      translations: {
+        KJV: "And we know that all things work together for good to them that love God, to them who are the called according to his purpose."
+      },
+      refs: ["Genesis 50:20", "Jeremiah 29:11", "James 1:2-4", "Philippians 1:6"]
+    },
+    "Romans 12:2": {
+      translations: {
+        KJV: "And be not conformed to this world: but be ye transformed by the renewing of your mind, that ye may prove what is that good, and acceptable, and perfect, will of God."
+      },
+      refs: ["Ephesians 4:23-24", "2 Corinthians 3:18", "Colossians 3:10", "Titus 3:5"]
+    },
+    "1 Corinthians 13:4-5": {
+      translations: {
+        KJV: "Charity suffereth long, and is kind; charity envieth not; charity vaunteth not itself, is not puffed up, Doth not behave itself unseemly, seeketh not her own, is not easily provoked, thinketh no evil."
+      },
+      refs: ["John 13:34-35", "Colossians 3:12-14", "1 Peter 4:8", "Galatians 5:22-23"]
+    },
+    "Philippians 4:13": {
+      translations: {
+        KJV: "I can do all things through Christ which strengtheneth me."
+      },
+      refs: ["2 Corinthians 12:9", "Isaiah 41:10", "Ephesians 3:16", "Psalm 18:32"]
+    },
+    "Ephesians 2:8-9": {
+      translations: {
+        KJV: "For by grace are ye saved through faith; and that not of yourselves: it is the gift of God: Not of works, lest any man should boast."
+      },
+      refs: ["Romans 3:23-24", "Titus 3:5", "Romans 11:6", "Galatians 2:16"]
+    },
+    "Galatians 5:22-23": {
+      translations: {
+        KJV: "But the fruit of the Spirit is love, joy, peace, longsuffering, gentleness, goodness, faith, Meekness, temperance: against such there is no law."
+      },
+      refs: ["John 15:4-5", "Colossians 3:12-14", "1 Corinthians 13:4-7", "Romans 5:3-5"]
+    },
+    "Joshua 1:9": {
+      translations: {
+        KJV: "Have not I commanded thee? Be strong and of a good courage; be not afraid, neither be thou dismayed: for the LORD thy God is with thee whithersoever thou goest."
+      },
+      refs: ["Deuteronomy 31:6", "Isaiah 41:10", "Psalm 27:1", "2 Timothy 1:7"]
+    }
+  };
+
+  const POPULAR = Object.keys(LIBRARY);
+  const chipList = document.getElementById('ccChipList');
+  const refDatalist = document.getElementById('ccRefList');
+  const verseCard = document.getElementById('ccVerseCard');
+  const explanationEl = document.getElementById('ccExplanation');
+  const svg = document.getElementById('ccThreadSvg');
+  const searchInput = document.getElementById('ccSearchInput');
+  const searchBtn = document.getElementById('ccSearchBtn');
+  const situationInput = document.getElementById('ccSituationInput');
+  const situationBtn = document.getElementById('ccSituationBtn');
+  const pathTrack = document.getElementById('ccPathTrack');
+  const translationSelect = document.getElementById('ccTranslationSelect');
+
+  let currentRef = null;
+  let currentPath = null;      // [{ref, reason}, ...] when in situational mode
+  let currentPathIndex = -1;
+  let currentReasonBanner = null;
+  let currentTranslation = 'KJV';
+
+  POPULAR.forEach(ref => {
+    const opt = document.createElement('option');
+    opt.value = ref;
+    refDatalist.appendChild(opt);
+
+    const chip = document.createElement('button');
+    chip.className = 'cc-chip';
+    chip.textContent = ref;
+    chip.dataset.ref = ref;
+    chip.addEventListener('click', () => { clearPath(); loadVerse(ref); });
+    chipList.appendChild(chip);
+  });
+
+  function findLibraryKey(input) {
+    const clean = input.trim().toLowerCase();
+    return POPULAR.find(k => k.toLowerCase() === clean) || null;
+  }
+
+  function setActiveChip(ref) {
+    document.querySelectorAll('.cc-chip').forEach(c => {
+      c.classList.toggle('active', c.dataset.ref === ref);
+    });
+  }
+
+  function renderVerseCard(ref, entry) {
+    const isCurated = !!entry;
+    let sourceLabel, verseText, fallbackNote = '';
+
+    if (isCurated) {
+      const wanted = entry.translations[currentTranslation];
+      if (wanted) {
+        verseText = wanted;
+        sourceLabel = `Source: ${TRANSLATIONS[currentTranslation].name} · curated`;
+      } else {
+        verseText = entry.translations.KJV;
+        sourceLabel = `Source: King James Version · curated`;
+        fallbackNote = `<div class="cc-translation-note">${TRANSLATIONS[currentTranslation].name} isn't in the library for this verse yet — showing KJV instead.</div>`;
+      }
+    } else {
+      verseText = 'Full text not available offline — check your Bible for exact wording. The explanation below covers what this passage is about.';
+      sourceLabel = 'Not in local library · text unverified';
+    }
+
+    verseCard.innerHTML = `
+      <div class="cc-verse-tag">${ref}</div><br/>
+      <span class="cc-source-badge ${isCurated ? '' : 'unverified'}">${sourceLabel}</span>
+      <div class="cc-verse-text">${verseText}</div>
+      ${fallbackNote}
+      ${isCurated ? '' : '<div class="cc-verse-note">Tip: add commonly-referenced passages to the library dataset to display verified text here.</div>'}
+    `;
+  }
+
+  function polarPoint(cx, cy, r, angleDeg) {
+    const rad = (angleDeg - 90) * Math.PI / 180;
+    return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
+  }
+
+  const KIND_STYLE = {
+    curated: { color: 'var(--gold)', dash: '' },
+    ai: { color: 'var(--oxblood-soft)', dash: 'stroke-dasharray="4 4"' },
+    situational: { color: 'var(--sage)', dash: 'stroke-dasharray="2 4"' }
+  };
+
+  // nodes: [{ref, kind}]
+  function renderThreadMap(ref, nodes) {
+    const cx = 180, cy = 180, r = 130;
+    const n = Math.max(nodes.length, 1);
+    let svgParts = [];
+
+    svgParts.push(`<circle cx="${cx}" cy="${cy}" r="9" fill="var(--oxblood)" />`);
+    svgParts.push(`<text x="${cx}" y="${cy + 26}" text-anchor="middle" class="cc-node-label" font-weight="600">${ref}</text>`);
+
+    nodes.forEach((node, i) => {
+      const angle = (360 / n) * i;
+      const pt = polarPoint(cx, cy, r, angle);
+      const midR = r * 0.55;
+      const mid = polarPoint(cx, cy, midR, angle + (i % 2 === 0 ? 8 : -8));
+      const style = KIND_STYLE[node.kind] || KIND_STYLE.curated;
+
+      svgParts.push(`<path class="cc-thread-path" d="M ${cx} ${cy} Q ${mid.x} ${mid.y} ${pt.x} ${pt.y}" stroke="${style.color}" stroke-width="1.6" ${style.dash} />`);
+      svgParts.push(`<g class="cc-thread-node" data-ref="${node.ref}">
+        <circle class="cc-node-circle" cx="${pt.x}" cy="${pt.y}" r="5.5" fill="${style.color}" />
+        <text x="${pt.x}" y="${pt.y + (pt.y > cy ? 16 : -10)}" text-anchor="middle" class="cc-node-label">${node.ref}</text>
+      </g>`);
+    });
+
+    svg.innerHTML = svgParts.join('');
+    svg.querySelectorAll('.cc-thread-node').forEach(g => {
+      g.addEventListener('click', () => {
+        const ref2 = g.getAttribute('data-ref');
+        const key = findLibraryKey(ref2);
+        if (currentPath) {
+          const idx = currentPath.findIndex(p => p.ref === ref2);
+          if (idx !== -1) { goToPathStep(idx); return; }
+        }
+        loadVerse(key || ref2);
+      });
+    });
+  }
+
+  function loadingHTML() {
+    const banner = currentReasonBanner ? reasonBannerHTML(currentReasonBanner) : '';
+    return `${banner}<div class="cc-loading"><span class="cc-dot"></span><span class="cc-dot"></span><span class="cc-dot"></span> Studying the passage…</div>`;
+  }
+
+  function reasonBannerHTML(reason) {
+    return `<div class="cc-reason-banner"><h4>Why this connects</h4><p>${reason}</p></div>`;
+  }
+
+  function renderExplanation(data) {
+    const banner = currentReasonBanner ? reasonBannerHTML(currentReasonBanner) : '';
+    explanationEl.innerHTML = `
+      ${banner}
+      <div class="cc-explain-grid">
+        <div class="cc-explain-card"><h4>Summary</h4><p>${data.summary}</p></div>
+        <div class="cc-explain-card"><h4>Context</h4><p>${data.context}</p></div>
+        <div class="cc-explain-card"><h4>Application</h4><p>${data.application}</p></div>
+      </div>
+    `;
+  }
+
+  function renderPathTrack() {
+    if (!currentPath) { pathTrack.innerHTML = ''; return; }
+    pathTrack.innerHTML = currentPath.map((step, i) => `
+      <button class="cc-path-step ${i === currentPathIndex ? 'active' : ''}" data-idx="${i}">
+        <span class="cc-step-num">${i + 1}</span>${step.ref}
+      </button>
+    `).join('');
+    pathTrack.querySelectorAll('.cc-path-step').forEach(btn => {
+      btn.addEventListener('click', () => goToPathStep(parseInt(btn.dataset.idx, 10)));
+    });
+  }
+
+  function goToPathStep(idx) {
+    currentPathIndex = idx;
+    const step = currentPath[idx];
+    currentReasonBanner = step.reason;
+    renderPathTrack();
+    loadVerseCore(step.ref);
+  }
+
+  function clearPath() {
+    currentPath = null;
+    currentPathIndex = -1;
+    currentReasonBanner = null;
+    pathTrack.innerHTML = '';
+  }
+
+  async function fetchExplanation(ref, text, curatedRefs) {
+    explanationEl.innerHTML = loadingHTML();
+    try {
+      const prompt = `You are a careful, denominationally neutral Bible study assistant.
+Passage reference: ${ref}
+${text ? `Passage text (KJV): "${text}"` : 'Full text was not supplied; rely on general knowledge of this passage and stay cautious about exact wording.'}
+
+Respond with ONLY a JSON object, no markdown fences, no preamble, in exactly this shape:
+{
+  "summary": "2-3 sentence plain-English summary of what this passage communicates",
+  "context": "2-3 sentences of historical or literary context: who wrote it, to whom, and what surrounds it",
+  "application": "1-2 sentences on a practical, non-preachy takeaway for a reader today",
+  "suggestedRefs": [{"ref": "Book Chapter:Verse", "reason": "short phrase, under 8 words"}]
+}
+Provide up to 4 suggestedRefs that are thematically connected but different from these already-listed cross-references: ${JSON.stringify(curatedRefs)}.
+Keep the tone warm, plain-spoken, and non-sectarian.`;
+
+      const response = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-6",
+          max_tokens: 1000,
+          messages: [{ role: "user", content: prompt }]
+        })
+      });
+      const data = await response.json();
+      const raw = (data.content || []).map(b => b.text || "").join("\n");
+      const clean = raw.replace(/```json|```/g, "").trim();
+      const parsed = JSON.parse(clean);
+
+      renderExplanation(parsed);
+      const suggested = (parsed.suggestedRefs || []).map(s => s.ref).filter(Boolean).slice(0, 4);
+      const nodes = [
+        ...curatedRefs.map(r2 => ({ ref: r2, kind: 'curated' })),
+        ...suggested.map(r2 => ({ ref: r2, kind: 'ai' })),
+        ...(currentPath ? currentPath.filter(p => p.ref !== ref).map(p => ({ ref: p.ref, kind: 'situational' })) : [])
+      ];
+      renderThreadMap(ref, nodes);
+    } catch (err) {
+      explanationEl.innerHTML = `${currentReasonBanner ? reasonBannerHTML(currentReasonBanner) : ''}<div class="cc-error">Couldn't reach the explanation service right now. (${err.message || 'unknown error'}) The curated cross-references above are still accurate.</div>`;
+      const nodes = [
+        ...curatedRefs.map(r2 => ({ ref: r2, kind: 'curated' })),
+        ...(currentPath ? currentPath.filter(p => p.ref !== ref).map(p => ({ ref: p.ref, kind: 'situational' })) : [])
+      ];
+      renderThreadMap(ref, nodes);
+    }
+  }
+
+  // Core loader — does not touch situational state (used by both plain lookup and path navigation)
+  function loadVerseCore(refInput) {
+    const key = findLibraryKey(refInput);
+    const entry = key ? LIBRARY[key] : null;
+    const ref = key || refInput.trim();
+    const textForAi = entry ? (entry.translations[currentTranslation] || entry.translations.KJV) : null;
+
+    currentRef = ref;
+    searchInput.value = ref;
+    setActiveChip(key || '');
+    renderVerseCard(ref, entry);
+    renderThreadMap(ref, entry ? entry.refs.map(r2 => ({ ref: r2, kind: 'curated' })) : []);
+    fetchExplanation(ref, textForAi, entry ? entry.refs : []);
+  }
+
+  // Public loader for plain reference search — clears situational mode
+  function loadVerse(refInput) {
+    loadVerseCore(refInput);
+  }
+
+  translationSelect.addEventListener('change', () => {
+    currentTranslation = translationSelect.value;
+    if (currentRef) {
+      const key = findLibraryKey(currentRef);
+      renderVerseCard(currentRef, key ? LIBRARY[key] : null);
+    }
+  });
+
+  async function findStartingPoint(situationText) {
+    situationBtn.disabled = true;
+    situationBtn.textContent = 'Finding a starting point…';
+    try {
+      const prompt = `You are a thoughtful, denominationally neutral Bible study guide.
+Someone shared what's going on in their life: "${situationText}"
+
+Choose a short guided path of 3 Bible passages (well-known verses, easy to find) that speak to their situation, moving from acknowledgment toward encouragement or direction. Respond with ONLY a JSON object, no markdown fences, no preamble, in exactly this shape:
+{
+  "path": [
+    {"ref": "Book Chapter:Verse", "reason": "1-2 sentences, speaking directly to what they shared, warm and specific, not generic"},
+    {"ref": "Book Chapter:Verse", "reason": "..."},
+    {"ref": "Book Chapter:Verse", "reason": "..."}
+  ]
+}
+Prefer well-known passages when they genuinely fit. Do not diagnose or moralize — just explain why each passage is relevant to what they described.`;
+
+      const response = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          model: "claude-sonnet-4-6",
+          max_tokens: 1000,
+          messages: [{ role: "user", content: prompt }]
+        })
+      });
+      const data = await response.json();
+      const raw = (data.content || []).map(b => b.text || "").join("\n");
+      const clean = raw.replace(/```json|```/g, "").trim();
+      const parsed = JSON.parse(clean);
+
+      currentPath = (parsed.path || []).filter(p => p.ref);
+      if (!currentPath.length) throw new Error('No path returned');
+      goToPathStep(0);
+    } catch (err) {
+      pathTrack.innerHTML = `<div class="cc-error">Couldn't find a starting point right now. (${err.message || 'unknown error'}) Try the reference search below instead.</div>`;
+    } finally {
+      situationBtn.disabled = false;
+      situationBtn.textContent = 'Find where to start';
+    }
+  }
+
+  searchBtn.addEventListener('click', () => {
+    if (searchInput.value.trim()) { clearPath(); loadVerse(searchInput.value.trim()); }
+  });
+  searchInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && searchInput.value.trim()) { clearPath(); loadVerse(searchInput.value.trim()); }
+  });
+  situationBtn.addEventListener('click', () => {
+    if (situationInput.value.trim()) findStartingPoint(situationInput.value.trim());
+  });
+
+  loadVerse("John 3:16");
+})();
+</script>
