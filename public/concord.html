@@ -293,6 +293,7 @@
   letter-spacing: 0.08em;
 }
 .cc-source-badge.unverified { color: var(--oxblood-soft); }
+.cc-source-badge.live { color: var(--sage); }
 
 .cc-verse-text {
   font-family: var(--font-verse);
@@ -810,30 +811,46 @@
   }
 
   function renderVerseCard(ref, entry) {
-    const isCurated = !!entry;
-    let sourceLabel, verseText, fallbackNote = '';
-
-    if (isCurated) {
-      const wanted = entry.translations[currentTranslation];
-      if (wanted) {
-        verseText = wanted;
-        sourceLabel = `Source: ${TRANSLATIONS[currentTranslation].name} · curated`;
-      } else {
-        verseText = entry.translations.KJV;
-        sourceLabel = `Source: King James Version · curated`;
-        fallbackNote = `<div class="cc-translation-note">${TRANSLATIONS[currentTranslation].name} isn't in the library for this verse yet — showing KJV instead.</div>`;
-      }
+    const wanted = entry.translations[currentTranslation];
+    let verseText, sourceLabel, fallbackNote = '';
+    if (wanted) {
+      verseText = wanted;
+      sourceLabel = `Source: ${TRANSLATIONS[currentTranslation].name} · curated`;
     } else {
-      verseText = 'Full text not available offline — check your Bible for exact wording. The explanation below covers what this passage is about.';
-      sourceLabel = 'Not in local library · text unverified';
+      verseText = entry.translations.KJV;
+      sourceLabel = `Source: King James Version · curated`;
+      fallbackNote = `<div class="cc-translation-note">${TRANSLATIONS[currentTranslation].name} isn't in the library for this verse yet — showing KJV instead.</div>`;
     }
-
     verseCard.innerHTML = `
       <div class="cc-verse-tag">${ref}</div><br/>
-      <span class="cc-source-badge ${isCurated ? '' : 'unverified'}">${sourceLabel}</span>
+      <span class="cc-source-badge">${sourceLabel}</span>
       <div class="cc-verse-text">${verseText}</div>
       ${fallbackNote}
-      ${isCurated ? '' : '<div class="cc-verse-note">Tip: add commonly-referenced passages to the library dataset to display verified text here.</div>'}
+    `;
+  }
+
+  function renderVerseCardLoading(ref) {
+    verseCard.innerHTML = `
+      <div class="cc-verse-tag">${ref}</div><br/>
+      <span class="cc-source-badge">Looking up full text…</span>
+      <div class="cc-verse-text" style="opacity:0.5;">Fetching from the full-Bible lookup…</div>
+    `;
+  }
+
+  function renderVerseCardLive(ref, data) {
+    verseCard.innerHTML = `
+      <div class="cc-verse-tag">${ref}</div><br/>
+      <span class="cc-source-badge live">Source: ${data.translation} · live lookup</span>
+      <div class="cc-verse-text">${data.text}</div>
+    `;
+  }
+
+  function renderVerseCardUnavailable(ref, message) {
+    verseCard.innerHTML = `
+      <div class="cc-verse-tag">${ref}</div><br/>
+      <span class="cc-source-badge unverified">Couldn't fetch text</span>
+      <div class="cc-verse-text">Full text not available right now — check your Bible for exact wording. The explanation below still covers what this passage is about.</div>
+      <div class="cc-verse-note">${message || 'The lookup service may be temporarily unavailable.'}</div>
     `;
   }
 
@@ -966,18 +983,42 @@
   }
 
   // Core loader — does not touch situational state (used by both plain lookup and path navigation)
-  function loadVerseCore(refInput) {
+  async function loadVerseCore(refInput) {
     const key = findLibraryKey(refInput);
     const entry = key ? LIBRARY[key] : null;
     const ref = key || refInput.trim();
-    const textForAi = entry ? (entry.translations[currentTranslation] || entry.translations.KJV) : null;
 
     currentRef = ref;
     searchInput.value = ref;
     setActiveChip(key || '');
-    renderVerseCard(ref, entry);
-    renderThreadMap(ref, entry ? entry.refs.map(r2 => ({ ref: r2, kind: 'curated' })) : []);
-    fetchExplanation(ref, textForAi, entry ? entry.refs : []);
+
+    if (entry) {
+      const textForAi = entry.translations[currentTranslation] || entry.translations.KJV;
+      renderVerseCard(ref, entry);
+      renderThreadMap(ref, entry.refs.map(r2 => ({ ref: r2, kind: 'curated' })));
+      fetchExplanation(ref, textForAi, entry.refs);
+      return;
+    }
+
+    // Not in the curated 41 — try the full-Bible live lookup instead of giving up.
+    renderVerseCardLoading(ref);
+    renderThreadMap(ref, []);
+    try {
+      const liveTranslation = currentTranslation === 'WEB' ? 'web' : 'kjv';
+      const res = await fetch(`/api/verse?ref=${encodeURIComponent(ref)}&translation=${liveTranslation}`);
+      if (!res.ok) {
+        const errBody = await res.json().catch(() => ({}));
+        throw new Error(errBody.error || `Server returned ${res.status}`);
+      }
+      const data = await res.json();
+      if (currentRef !== ref) return; // user navigated away before this resolved
+      renderVerseCardLive(ref, data);
+      fetchExplanation(ref, data.text, []);
+    } catch (err) {
+      if (currentRef !== ref) return;
+      renderVerseCardUnavailable(ref, err.message);
+      fetchExplanation(ref, null, []);
+    }
   }
 
   // Public loader for plain reference search — clears situational mode
@@ -987,10 +1028,7 @@
 
   translationSelect.addEventListener('change', () => {
     currentTranslation = translationSelect.value;
-    if (currentRef) {
-      const key = findLibraryKey(currentRef);
-      renderVerseCard(currentRef, key ? LIBRARY[key] : null);
-    }
+    if (currentRef) loadVerseCore(currentRef);
   });
 
   async function findStartingPoint(situationText) {
