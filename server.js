@@ -2,6 +2,7 @@ import express from 'express';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
+import rateLimit from 'express-rate-limit';
 
 dotenv.config();
 
@@ -9,11 +10,30 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
+app.set('trust proxy', 1); // Railway sits behind a proxy — needed for accurate per-IP rate limiting
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'concord.html'));
+});
+
+// AI calls cost real money per request — capped generously for normal use, tight enough to block abuse.
+const aiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 40,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests right now — please wait a few minutes and try again.' }
+});
+
+// Verse lookups are free but still worth capping so one client can't hammer bible-api.com through us.
+const verseLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 120,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: 'Too many requests right now — please wait a few minutes and try again.' }
 });
 
 const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
@@ -57,12 +77,21 @@ async function callClaude(prompt, maxTokens = 1000) {
 }
 
 // Explain a specific passage and suggest additional cross-references.
-app.post('/api/explain', async (req, res) => {
+// Cached by reference — the explanation for a given verse rarely needs to be regenerated per user.
+const explanationCache = new Map();
+const EXPLANATION_CACHE_MAX = 500;
+
+app.post('/api/explain', aiLimiter, async (req, res) => {
   try {
     if (!ANTHROPIC_API_KEY) return res.status(500).json({ error: 'Server is missing ANTHROPIC_API_KEY' });
 
     const { ref, text, curatedRefs = [] } = req.body || {};
     if (!ref) return res.status(400).json({ error: 'Missing "ref" in request body' });
+
+    const cacheKey = ref.trim().toLowerCase();
+    if (explanationCache.has(cacheKey)) {
+      return res.json(explanationCache.get(cacheKey));
+    }
 
     const prompt = `You are a careful, denominationally neutral Bible study assistant.
 Passage reference: ${ref}
@@ -79,6 +108,12 @@ Provide up to 4 suggestedRefs that are thematically connected but different from
 Keep the tone warm, plain-spoken, and non-sectarian.`;
 
     const parsed = await callClaude(prompt, 1000);
+
+    if (explanationCache.size >= EXPLANATION_CACHE_MAX) {
+      explanationCache.delete(explanationCache.keys().next().value); // evict oldest
+    }
+    explanationCache.set(cacheKey, parsed);
+
     res.json(parsed);
   } catch (err) {
     console.error('[/api/explain]', err.message);
@@ -87,13 +122,23 @@ Keep the tone warm, plain-spoken, and non-sectarian.`;
 });
 
 // Map a described life situation onto a short guided path through scripture.
-app.post('/api/situation', async (req, res) => {
+// Cached by the exact situation text — helps if the same phrase gets submitted more than once,
+// though freeform input means most requests will still be fresh calls.
+const situationCache = new Map();
+const SITUATION_CACHE_MAX = 200;
+
+app.post('/api/situation', aiLimiter, async (req, res) => {
   try {
     if (!ANTHROPIC_API_KEY) return res.status(500).json({ error: 'Server is missing ANTHROPIC_API_KEY' });
 
     const { situationText } = req.body || {};
     if (!situationText || !situationText.trim()) {
       return res.status(400).json({ error: 'Missing "situationText" in request body' });
+    }
+
+    const cacheKey = situationText.trim().toLowerCase();
+    if (situationCache.has(cacheKey)) {
+      return res.json(situationCache.get(cacheKey));
     }
 
     const prompt = `You are a thoughtful, denominationally neutral Bible study guide.
@@ -110,6 +155,12 @@ Choose a short guided path of 3 Bible passages (well-known verses, easy to find)
 Prefer well-known passages when they genuinely fit. Do not diagnose or moralize — just explain why each passage is relevant to what they described.`;
 
     const parsed = await callClaude(prompt, 1000);
+
+    if (situationCache.size >= SITUATION_CACHE_MAX) {
+      situationCache.delete(situationCache.keys().next().value);
+    }
+    situationCache.set(cacheKey, parsed);
+
     res.json(parsed);
   } catch (err) {
     console.error('[/api/situation]', err.message);
@@ -118,14 +169,19 @@ Prefer well-known passages when they genuinely fit. Do not diagnose or moralize 
 });
 
 app.get('/api/health', (req, res) => {
-  res.json({ ok: true, keyConfigured: !!ANTHROPIC_API_KEY, model: MODEL });
+  res.json({
+    ok: true,
+    keyConfigured: !!ANTHROPIC_API_KEY,
+    model: MODEL,
+    cacheSizes: { explanations: explanationCache.size, situations: situationCache.size, verses: verseCache.size }
+  });
 });
 
 // Full-Bible verse lookup for anything outside the curated library.
 // Backed by bible-api.com — free, no key required, public-domain translations only.
 const verseCache = new Map();
 
-app.get('/api/verse', async (req, res) => {
+app.get('/api/verse', verseLimiter, async (req, res) => {
   try {
     const ref = (req.query.ref || '').trim();
     const translation = (req.query.translation || 'kjv').toLowerCase();
