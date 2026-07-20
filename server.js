@@ -87,6 +87,7 @@ app.post('/api/explain', aiLimiter, async (req, res) => {
 
     const { ref, text, curatedRefs = [] } = req.body || {};
     if (!ref) return res.status(400).json({ error: 'Missing "ref" in request body' });
+    if (ref.length > 150) return res.status(400).json({ error: 'Reference is too long' });
 
     const cacheKey = ref.trim().toLowerCase();
     if (explanationCache.has(cacheKey)) {
@@ -134,6 +135,9 @@ app.post('/api/situation', aiLimiter, async (req, res) => {
     const { situationText } = req.body || {};
     if (!situationText || !situationText.trim()) {
       return res.status(400).json({ error: 'Missing "situationText" in request body' });
+    }
+    if (situationText.length > 600) {
+      return res.status(400).json({ error: 'That description is too long — please keep it under 600 characters' });
     }
 
     const cacheKey = situationText.trim().toLowerCase();
@@ -186,6 +190,7 @@ app.get('/api/verse', verseLimiter, async (req, res) => {
     const ref = (req.query.ref || '').trim();
     const translation = (req.query.translation || 'kjv').toLowerCase();
     if (!ref) return res.status(400).json({ error: 'Missing "ref" query parameter' });
+    if (ref.length > 150) return res.status(400).json({ error: 'Reference is too long' });
 
     const cacheKey = `${translation}:${ref.toLowerCase()}`;
     if (verseCache.has(cacheKey)) {
