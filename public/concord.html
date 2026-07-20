@@ -1,9 +1,20 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Wayfinder — Core Covenant</title>
+<meta name="description" content="Read scripture with curated cross-references, live AI explanations, and a guided path through the Bible for whatever you're facing." />
+<link rel="icon" type="image/png" href="assets/favicon.png" />
+<meta property="og:title" content="Wayfinder — Core Covenant" />
+<meta property="og:description" content="Read scripture with curated cross-references, live AI explanations, and a guided path through the Bible for whatever you're facing." />
+<meta property="og:image" content="assets/og-image.png" />
+<meta property="og:type" content="website" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Wayfinder — Core Covenant" />
+<meta name="twitter:description" content="Read scripture with curated cross-references, live AI explanations, and a guided path through the Bible for whatever you're facing." />
+<meta name="twitter:image" content="assets/og-image.png" />
 <style>
   html, body { margin: 0; padding: 0; background: #141311; }
   body { display: flex; justify-content: center; padding: 24px 16px; box-sizing: border-box; }
@@ -258,6 +269,14 @@
   margin-top: 6px;
   line-height: 1.5;
 }
+.cc-situation-counter {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--ink-soft);
+  text-align: right;
+  margin-top: 4px;
+}
+.cc-situation-counter.near-limit { color: var(--oxblood-soft); }
 .cc-path-track {
   margin-top: 12px;
   display: flex;
@@ -305,6 +324,56 @@
 .cc-chip.active { background: var(--panel); color: var(--ink); border-color: var(--line); font-weight: 600; }
 .cc-chip:focus-visible { outline: 2px solid var(--gold); outline-offset: 1px; }
 
+.cc-history-list {
+  max-height: 220px;
+  overflow-y: auto;
+  margin-bottom: 10px;
+}
+.cc-history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  width: 100%;
+  text-align: left;
+  font-family: var(--font-body);
+  font-size: 13px;
+  padding: 7px 9px;
+  margin-bottom: 4px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  background: transparent;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+.cc-history-item:hover { background: var(--panel); color: var(--ink); }
+.cc-history-item .cc-history-time {
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  color: var(--ink-soft);
+  flex-shrink: 0;
+}
+.cc-history-empty {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--ink-soft);
+  padding: 10px 0;
+}
+.cc-clear-history-btn {
+  width: 100%;
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 8px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink-soft);
+  border-radius: 6px;
+  cursor: pointer;
+}
+.cc-clear-history-btn:hover { color: var(--oxblood-soft); border-color: var(--oxblood-soft); }
+
 .cc-main {
   padding: 26px 32px 32px;
   overflow-y: auto;
@@ -333,6 +402,20 @@
 }
 .cc-source-badge.unverified { color: var(--oxblood-soft); }
 .cc-source-badge.live { color: var(--sage); }
+
+.cc-share-btn {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink-soft);
+  border-radius: 100px;
+  cursor: pointer;
+}
+.cc-share-btn:hover { color: var(--gold); border-color: var(--gold); }
 
 .cc-verse-text {
   font-family: var(--font-verse);
@@ -481,6 +564,23 @@
   border-radius: 6px;
   padding: 12px 14px;
 }
+
+.cc-footer {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding: 14px 28px;
+  border-top: 1px solid var(--line);
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--ink-soft);
+}
+.cc-footer a { color: var(--gold); text-decoration: none; }
+.cc-footer a:hover { text-decoration: underline; }
+@media (max-width: 720px) {
+  .cc-footer { padding: 14px 16px; flex-direction: column; }
+}
 @media (max-width: 720px) {
   .cc-root { border-radius: 0; overflow: visible; min-height: 0; }
   .cc-header { flex-direction: column; align-items: flex-start; gap: 6px; padding: 16px 16px 14px; }
@@ -543,7 +643,7 @@
   </div>
 
   <div class="cc-topsearch">
-    <input id="ccSearchInput" type="text" placeholder="Look up a verse — e.g. Romans 8:28" list="ccRefList" />
+    <input id="ccSearchInput" type="text" maxlength="120" placeholder="Look up a verse — e.g. Romans 8:28" list="ccRefList" />
     <button id="ccSearchBtn">Go</button>
   </div>
   <datalist id="ccRefList"></datalist>
@@ -552,7 +652,8 @@
     <div class="cc-sidebar">
       <div class="cc-situation-block">
         <div class="cc-side-label">Start From How You're Feeling</div>
-        <textarea id="ccSituationInput" placeholder="e.g. I feel like I'm failing as a dad and I'm stretched too thin at work"></textarea>
+        <textarea id="ccSituationInput" maxlength="600" placeholder="e.g. I feel like I'm failing as a dad and I'm stretched too thin at work"></textarea>
+        <div id="ccSituationCounter" class="cc-situation-counter">0 / 600</div>
         <button id="ccSituationBtn" class="cc-situation-btn">Find where to start</button>
         <div class="cc-situation-hint">Claude picks a starting passage and a short path through scripture for what you described.</div>
         <div id="ccPathTrack" class="cc-path-track"></div>
@@ -560,11 +661,17 @@
 
       <div class="cc-tabs" role="tablist">
         <button class="cc-tab active" data-tab="popular" role="tab" aria-selected="true">Popular</button>
+        <button class="cc-tab" data-tab="history" role="tab" aria-selected="false">History</button>
         <button class="cc-tab" data-tab="about" role="tab" aria-selected="false">About</button>
       </div>
 
       <div id="ccTabPanelPopular" class="cc-tab-panel active">
         <div id="ccChipList"></div>
+      </div>
+
+      <div id="ccTabPanelHistory" class="cc-tab-panel">
+        <div id="ccHistoryList" class="cc-history-list"></div>
+        <button id="ccClearHistoryBtn" class="cc-clear-history-btn">Clear history</button>
       </div>
 
       <div id="ccTabPanelAbout" class="cc-tab-panel">
@@ -603,6 +710,11 @@
       <div class="cc-section-label">Explanation</div>
       <div id="ccExplanation"></div>
     </div>
+  </div>
+
+  <div class="cc-footer">
+    <span>Scripture: KJV, WEB (public domain) · Explanations generated by Claude</span>
+    <span>© Core Covenant, EST. 2026 · <a href="/privacy.html">Privacy</a></span>
   </div>
 </div>
 
@@ -880,8 +992,12 @@
   const tabButtons = document.querySelectorAll('.cc-tab');
   const tabPanels = {
     popular: document.getElementById('ccTabPanelPopular'),
+    history: document.getElementById('ccTabPanelHistory'),
     about: document.getElementById('ccTabPanelAbout')
   };
+  const historyList = document.getElementById('ccHistoryList');
+  const clearHistoryBtn = document.getElementById('ccClearHistoryBtn');
+  const situationCounter = document.getElementById('ccSituationCounter');
 
   tabButtons.forEach(btn => {
     btn.addEventListener('click', () => {
@@ -894,8 +1010,77 @@
       Object.entries(tabPanels).forEach(([key, panel]) => {
         panel.classList.toggle('active', key === target);
       });
+      if (target === 'history') renderHistoryTab();
     });
   });
+
+  // --- Local history (stored only in this browser, never sent to the server) ---
+  const HISTORY_KEY = 'wayfinder_history';
+  const HISTORY_MAX = 20;
+
+  function getHistory() {
+    try {
+      const raw = localStorage.getItem(HISTORY_KEY);
+      return raw ? JSON.parse(raw) : [];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  function recordHistory(ref) {
+    try {
+      let list = getHistory().filter(item => item.ref !== ref);
+      list.unshift({ ref, ts: Date.now() });
+      if (list.length > HISTORY_MAX) list = list.slice(0, HISTORY_MAX);
+      localStorage.setItem(HISTORY_KEY, JSON.stringify(list));
+    } catch (e) {
+      // localStorage unavailable (private browsing, etc.) — history just won't persist
+    }
+  }
+
+  function formatHistoryTime(ts) {
+    const diffMs = Date.now() - ts;
+    const mins = Math.floor(diffMs / 60000);
+    if (mins < 1) return 'just now';
+    if (mins < 60) return `${mins}m ago`;
+    const hours = Math.floor(mins / 60);
+    if (hours < 24) return `${hours}h ago`;
+    return `${Math.floor(hours / 24)}d ago`;
+  }
+
+  function renderHistoryTab() {
+    const list = getHistory();
+    if (!list.length) {
+      historyList.innerHTML = `<div class="cc-history-empty">Verses you look up will show up here — stored only in this browser.</div>`;
+      return;
+    }
+    historyList.innerHTML = list.map(item => `
+      <button class="cc-history-item" data-ref="${item.ref}">
+        <span>${item.ref}</span>
+        <span class="cc-history-time">${formatHistoryTime(item.ts)}</span>
+      </button>
+    `).join('');
+    historyList.querySelectorAll('.cc-history-item').forEach(btn => {
+      btn.addEventListener('click', () => {
+        clearPath();
+        loadVerse(btn.dataset.ref);
+      });
+    });
+  }
+
+  clearHistoryBtn.addEventListener('click', () => {
+    try { localStorage.removeItem(HISTORY_KEY); } catch (e) {}
+    renderHistoryTab();
+  });
+
+  if (situationInput && situationCounter) {
+    situationInput.addEventListener('input', () => {
+      const len = situationInput.value.length;
+      const max = situationInput.maxLength;
+      situationCounter.textContent = `${len} / ${max}`;
+      situationCounter.classList.toggle('near-limit', len >= max - 40);
+    });
+  }
 
   let currentRef = null;
   let currentPath = null;      // [{ref, reason}, ...] when in situational mode
@@ -927,6 +1112,10 @@
     });
   }
 
+  function shareButtonHTML() {
+    return `<button class="cc-share-btn" type="button">Share</button>`;
+  }
+
   function renderVerseCard(ref, entry) {
     const wanted = entry.translations[currentTranslation];
     let verseText, sourceLabel, fallbackNote = '';
@@ -939,7 +1128,7 @@
       fallbackNote = `<div class="cc-translation-note">${TRANSLATIONS[currentTranslation].name} isn't in the library for this verse yet — showing KJV instead.</div>`;
     }
     verseCard.innerHTML = `
-      <div class="cc-verse-tag">${ref}</div><br/>
+      <div class="cc-verse-tag">${ref}</div> ${shareButtonHTML()}<br/>
       <span class="cc-source-badge">${sourceLabel}</span>
       <div class="cc-verse-text">${verseText}</div>
       ${fallbackNote}
@@ -956,7 +1145,7 @@
 
   function renderVerseCardLive(ref, data) {
     verseCard.innerHTML = `
-      <div class="cc-verse-tag">${ref}</div><br/>
+      <div class="cc-verse-tag">${ref}</div> ${shareButtonHTML()}<br/>
       <span class="cc-source-badge live">Source: ${data.translation} · live lookup</span>
       <div class="cc-verse-text">${data.text}</div>
     `;
@@ -964,12 +1153,28 @@
 
   function renderVerseCardUnavailable(ref, message) {
     verseCard.innerHTML = `
-      <div class="cc-verse-tag">${ref}</div><br/>
+      <div class="cc-verse-tag">${ref}</div> ${shareButtonHTML()}<br/>
       <span class="cc-source-badge unverified">Couldn't fetch text</span>
       <div class="cc-verse-text">Full text not available right now — check your Bible for exact wording. The explanation below still covers what this passage is about.</div>
       <div class="cc-verse-note">${message || 'The lookup service may be temporarily unavailable.'}</div>
     `;
   }
+
+  // Event delegation — verseCard's content is replaced wholesale on every render,
+  // so a single listener on the stable parent handles all Share button clicks.
+  verseCard.addEventListener('click', async (e) => {
+    if (!e.target.classList.contains('cc-share-btn')) return;
+    if (!currentRef) return;
+    const url = `${location.origin}${location.pathname}?ref=${encodeURIComponent(currentRef)}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      e.target.textContent = 'Copied!';
+      setTimeout(() => { e.target.textContent = 'Share'; }, 1500);
+    } catch (err) {
+      e.target.textContent = 'Copy failed';
+      setTimeout(() => { e.target.textContent = 'Share'; }, 1500);
+    }
+  });
 
   function polarPoint(cx, cy, r, angleDeg) {
     const rad = (angleDeg - 90) * Math.PI / 180;
@@ -1114,6 +1319,7 @@
       renderVerseCard(ref, entry);
       renderThreadMap(ref, entry.refs.map(r2 => ({ ref: r2, kind: 'curated' })));
       fetchExplanation(ref, textForAi, entry.refs);
+      recordHistory(ref);
       return;
     }
 
@@ -1131,6 +1337,7 @@
       if (currentRef !== ref) return; // user navigated away before this resolved
       renderVerseCardLive(ref, data);
       fetchExplanation(ref, data.text, []);
+      recordHistory(ref);
     } catch (err) {
       if (currentRef !== ref) return;
       renderVerseCardUnavailable(ref, err.message);
@@ -1184,7 +1391,8 @@
     if (situationInput.value.trim()) findStartingPoint(situationInput.value.trim());
   });
 
-  loadVerse("John 3:16");
+  const sharedRef = new URLSearchParams(location.search).get('ref');
+  loadVerse(sharedRef && sharedRef.trim() ? sharedRef.trim() : "John 3:16");
 })();
 </script>
 
