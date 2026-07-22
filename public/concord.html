@@ -1,118 +1,4 @@
 
-Claude is responding
-
-Assessed remaining gaps and distinguished urgent tasks from optional polish
-Assessed remaining gaps and distinguished urgent tasks from optional polish
-We've actually covered the real must-haves now. What's left splits into a few different buckets — some worth doing soon, some are genuinely optional, and a couple aren't code at all.
-
-Quick, worth doing soon
-
-Set a hard spending cap in the Anthropic console (Settings → Billing → usage limits) — rate limiting protects against abuse, but a spend cap protects against a legitimate traffic spike costing more than expected. Two minutes, real protection, not something I can do for you since it's account-level.
-Terms of use, not just privacy — you have a privacy page now; a short terms page (no warranty, not professional counsel, use at your own discretion) is a sensible companion, especially given the app touches personal/emotional input.
-Custom domain — right now it's Railway's auto-generated subdomain. If this is meant to be a real public-facing tool tied to Core Covenant, pointing a real domain at it (Railway supports this in Settings → Networking) matters more for how legitimate it feels than almost anything else on this list.
-Genuinely optional, real feature ideas
-
-Bookmarks/favorites, distinct from history — history is automatic and rolls off after 20; a deliberate "save this one" is a different, additive feature.
-Expand the curated library past 41 — most verses still fall back to live lookup, which works fine but has no curated cross-references.
-A daily verse / notification hook — the single biggest lever for people actually returning to the app instead of using it once.
-Not code — just worth knowing
-
-No analytics at all right now, so you have zero visibility into whether anyone's actually using this beyond you. Something simple and privacy-respecting (page views only, no personal tracking) would tell you what's worth building next instead of guessing.
-Given the foundation is genuinely solid now — security, mobile, sharing, history, legal basics all in place — I'd say the honest next move is less "what else can I bolt on" and more "get it in front of a few real people and see what they actually ask for." Is there a specific direction you want to take it, or do you want me to build one of the above?
-
-how can i make this better also how to explain to people how the app works
-
-
-Synthesized onboarding strategy with explainer materials and concrete next steps
-Synthesized onboarding strategy with explainer materials and concrete next steps
-Splitting this into two real things, since they're actually connected — the best way to explain the app is often to build the explanation into the app itself.
-
-Making it better: the gap I'd focus on next
-
-Everything under the hood is solid now (security, mobile, sharing, history). The thing that's still missing is first-impression clarity. Someone landing on Wayfinder for the first time sees a search bar, a "how are you feeling" box, tabs, a thread map with colored dashed lines — and nothing tells them what to do first or what any of it means. The About tab exists, but nobody reads an About tab unprompted.
-
-The highest-leverage fix: a short first-visit walkthrough — 3-4 lightweight tooltips that point at the search bar, the situational box, and the thread map, shown once (tracked via localStorage, same pattern as history), dismissible, never shown again after that. This solves "make it better" and "explain how it works" with one build, because it's explaining the app to people at the exact moment they need it — no external content required.
-
-Explaining it to people outside the app, for texts/social/word of mouth right now, no building needed:
-
-Short version:
-
-Wayfinder — search any Bible verse for real cross-references and a plain-English explanation. Or skip the search and just tell it what's going on in your life — it'll walk you through 3 passages built around that.
-
-Slightly longer, if you want something for a bio/caption:
-
-Wayfinder is a Bible study tool from Core Covenant. Search any verse to get curated cross-references and an AI-generated explanation of what it means and why it matters — or describe what you're going through, and it'll guide you through scripture built around your situation. Not Who I Was. Who I'm Becoming.
-
-Want me to build the in-app first-visit walkthrough now?
-Yes, build it
-
-Architected modal-based tour with localStorage persistence and z-index layering
-Architected modal-based tour with localStorage persistence and z-index layering
-Let's build this — a spotlight-style walkthrough that highlights the real UI elements in sequence, shows once automatically, and can be replayed from the About tab.
-
-
-Ran a command, viewed a file, edited a file
-Ran a command, viewed a file, edited a file
-Now the CSS for the backdrop, card, and spotlight effect:
-
-
-Add onboarding overlay CSS: backdrop, card, dots, buttons, spotlight highlight
-Add onboarding overlay CSS: backdrop, card, dots, buttons, spotlight highlight
-Now let's add the "Take the tour again" button to the About tab, and the JS logic:
-
-
-Ran a command, viewed a file, edited a file
-Ran a command, viewed a file, edited a file
-Now the JS logic. Let's add it near the end of the script, right before the final page-load call:
-
-
-Reconciling scrolling behavior with onboarding tour timing conflicts
-Reconciling scrolling behavior with onboarding tour timing conflicts
-Now let's validate everything:
-
-
-Full validation: syntax, div balance, key elements present, server boot
-Full validation: syntax, div balance, key elements present, server boot
-All clean. Let's package and share:
-
-
-Ran a command, read a file
-Ran a command, read a file
-Built and tested. Here's what it does:
-
-First visit, automatically: a dimmed backdrop appears with a spotlight ring around each real UI element in sequence — the search bar, the situational box, the thread map, then the tabs — each with a short caption explaining what it does. Dots show progress, "Skip" ends it early, "Next"/"Got it" walks through, and it scrolls each element into view smoothly so it works on mobile too.
-
-Shows only once — same localStorage pattern as History, tracked separately, so returning visitors never see it again unprompted.
-
-Replayable anytime — a "Take the tour again" button now sits in the About tab, for anyone who wants a refresher or skipped it the first time.
-
-Same deploy step, one file:
-
-cmd
-copy "C:\Users\61411\Downloads\concord.html" "C:\dev\wayfinder\public\concord.html"
-git add .
-git commit -m "Add first-visit onboarding tour"
-git push
-Between this and the explainer text from before, you're covered on both fronts — the app now explains itself to first-time users, and you've got ready-to-send copy for anyone you tell about it directly.
-
-
-Concord
-Code · HTML 
-can we do a explaination popup when you first load the page
-
-
-Weighed existing onboarding tour against simpler welcome modal option
-Weighed existing onboarding tour against simpler welcome modal option
-Quick check — I actually just built exactly this in my last message (a 4-step spotlight tour that
-
-
-
-
-
-Claude is AI and can make mistakes. Please double-check responses.
-
-
-Concord · HTML
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -139,7 +25,7 @@ Concord · HTML
 <div class="cc-page">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600&family=JetBrains+Mono:wght@400;500;600&display=swap');
- 
+
 .cc-root {
   --ink: #efe9da;
   --ink-soft: #a89c86;
@@ -155,7 +41,7 @@ Concord · HTML
   --font-verse: 'Fraunces', serif;
   --font-body: 'Source Serif 4', serif;
   --font-mono: 'JetBrains Mono', monospace;
- 
+
   background: var(--parchment);
   color: var(--ink);
   font-family: var(--font-body);
@@ -167,9 +53,9 @@ Concord · HTML
     radial-gradient(circle at 15% 10%, rgba(201,184,150,0.05), transparent 40%),
     radial-gradient(circle at 85% 85%, rgba(178,69,47,0.07), transparent 45%);
 }
- 
+
 .cc-root * { box-sizing: border-box; }
- 
+
 .cc-header {
   display: flex;
   align-items: baseline;
@@ -218,13 +104,13 @@ Concord · HTML
   max-width: 220px;
   line-height: 1.5;
 }
- 
+
 .cc-layout {
   display: grid;
   grid-template-columns: 240px 1fr;
   min-height: 580px;
 }
- 
+
 .cc-sidebar {
   border-right: 1px solid var(--line);
   padding: 20px;
@@ -261,7 +147,7 @@ Concord · HTML
   margin-top: -10px;
   margin-bottom: 16px;
 }
- 
+
 .cc-tabs {
   display: flex;
   gap: 4px;
@@ -286,7 +172,7 @@ Concord · HTML
 .cc-tab:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 .cc-tab-panel { display: none; }
 .cc-tab-panel.active { display: block; }
- 
+
 .cc-topsearch {
   display: flex;
   gap: 8px;
@@ -322,7 +208,7 @@ Concord · HTML
 }
 .cc-topsearch button:hover { background: var(--oxblood); border-color: var(--oxblood); color: var(--ink); }
 .cc-topsearch button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
- 
+
 .cc-about-text {
   font-family: var(--font-body);
   font-size: 13.5px;
@@ -337,7 +223,7 @@ Concord · HTML
   letter-spacing: 0.04em;
   color: var(--gold);
 }
- 
+
 .cc-situation-block {
   margin-bottom: 22px;
   padding-bottom: 20px;
@@ -411,7 +297,7 @@ Concord · HTML
 .cc-path-step:hover { background: var(--panel); }
 .cc-path-step.active { background: var(--panel); border-color: var(--sage); color: var(--ink); font-weight: 600; }
 .cc-path-step .cc-step-num { color: var(--sage); margin-right: 6px; }
- 
+
 .cc-side-label {
   font-family: var(--font-mono);
   font-size: 10px;
@@ -437,7 +323,7 @@ Concord · HTML
 .cc-chip:hover { background: var(--panel); color: var(--ink); }
 .cc-chip.active { background: var(--panel); color: var(--ink); border-color: var(--line); font-weight: 600; }
 .cc-chip:focus-visible { outline: 2px solid var(--gold); outline-offset: 1px; }
- 
+
 .cc-history-list {
   max-height: 220px;
   overflow-y: auto;
@@ -487,13 +373,13 @@ Concord · HTML
   cursor: pointer;
 }
 .cc-clear-history-btn:hover { color: var(--oxblood-soft); border-color: var(--oxblood-soft); }
- 
+
 .cc-main {
   padding: 26px 32px 32px;
   overflow-y: auto;
   max-height: 700px;
 }
- 
+
 .cc-verse-tag {
   display: inline-flex;
   align-items: center;
@@ -516,7 +402,7 @@ Concord · HTML
 }
 .cc-source-badge.unverified { color: var(--oxblood-soft); }
 .cc-source-badge.live { color: var(--sage); }
- 
+
 .cc-share-btn {
   font-family: var(--font-mono);
   font-size: 10px;
@@ -530,7 +416,7 @@ Concord · HTML
   cursor: pointer;
 }
 .cc-share-btn:hover { color: var(--gold); border-color: var(--gold); }
- 
+
 .cc-verse-text {
   font-family: var(--font-verse);
   font-size: 26px;
@@ -546,7 +432,7 @@ Concord · HTML
   color: var(--ink-soft);
   margin-bottom: 22px;
 }
- 
+
 .cc-section-label {
   font-family: var(--font-mono);
   font-size: 11px;
@@ -564,7 +450,7 @@ Concord · HTML
   height: 1px;
   background: var(--line);
 }
- 
+
 .cc-thread-wrap {
   display: flex;
   gap: 24px;
@@ -585,7 +471,7 @@ Concord · HTML
 .cc-legend-swatch { width: 22px; height: 0; border-top: 2px solid var(--gold); }
 .cc-legend-swatch.ai { border-top: 2px dashed var(--oxblood-soft); }
 .cc-legend-swatch.situational { border-top: 2px dashed var(--sage); }
- 
+
 .cc-reason-banner {
   background: rgba(77,89,64,0.1);
   border: 1px solid var(--sage);
@@ -609,7 +495,7 @@ Concord · HTML
   color: var(--ink);
   margin: 0;
 }
- 
+
 .cc-node-label {
   font-family: var(--font-mono);
   font-size: 10.5px;
@@ -619,7 +505,7 @@ Concord · HTML
 .cc-node-circle { cursor: pointer; transition: r 0.15s ease; }
 .cc-node-circle:hover { r: 7; }
 .cc-thread-path { fill: none; }
- 
+
 .cc-explain-grid {
   display: grid;
   gap: 14px;
@@ -647,7 +533,7 @@ Concord · HTML
   color: var(--ink);
   margin: 0;
 }
- 
+
 .cc-loading {
   font-family: var(--font-mono);
   font-size: 12px;
@@ -668,7 +554,7 @@ Concord · HTML
 @media (prefers-reduced-motion: reduce) {
   .cc-dot { animation: none; opacity: 0.6; }
 }
- 
+
 .cc-error {
   font-family: var(--font-mono);
   font-size: 12.5px;
@@ -678,7 +564,7 @@ Concord · HTML
   border-radius: 6px;
   padding: 12px 14px;
 }
- 
+
 .cc-footer {
   display: flex;
   justify-content: space-between;
@@ -695,7 +581,7 @@ Concord · HTML
 @media (max-width: 720px) {
   .cc-footer { padding: 14px 16px; flex-direction: column; }
 }
- 
+
 .cc-onboard-backdrop {
   position: fixed;
   inset: 0;
@@ -707,74 +593,57 @@ Concord · HTML
 .cc-onboard-card {
   position: fixed;
   left: 50%;
-  bottom: 24px;
-  transform: translateX(-50%);
+  top: 50%;
+  transform: translate(-50%, -50%);
   z-index: 9999;
   background: var(--panel);
   border: 1px solid var(--gold);
   border-radius: 12px;
-  padding: 20px 22px;
-  max-width: 360px;
+  padding: 32px 28px 26px;
+  max-width: 400px;
   width: calc(100% - 32px);
+  max-height: calc(100vh - 48px);
+  overflow-y: auto;
   box-shadow: 0 10px 40px rgba(0,0,0,0.6);
   font-family: var(--font-body);
+  text-align: center;
+}
+.cc-onboard-logo {
+  height: 40px;
+  width: auto;
+  margin-bottom: 14px;
 }
 .cc-onboard-title {
   font-family: var(--font-display);
   text-transform: uppercase;
   letter-spacing: 0.02em;
   color: var(--gold);
-  font-size: 16px;
-  margin-bottom: 8px;
+  font-size: 19px;
+  margin-bottom: 12px;
 }
 .cc-onboard-body {
   font-size: 13.5px;
-  line-height: 1.6;
+  line-height: 1.65;
   color: var(--ink);
-  margin-bottom: 16px;
+  margin-bottom: 22px;
+  text-align: left;
 }
-.cc-onboard-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.cc-onboard-dots { display: flex; gap: 6px; }
-.cc-onboard-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
-.cc-onboard-dot.active { background: var(--gold); }
-.cc-onboard-actions { display: flex; align-items: center; gap: 14px; }
-.cc-onboard-skip {
-  background: none;
-  border: none;
-  color: var(--ink-soft);
-  font-family: var(--font-mono);
-  font-size: 10.5px;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  cursor: pointer;
-  padding: 0;
-}
-.cc-onboard-skip:hover { color: var(--ink); }
 .cc-onboard-next {
+  display: block;
+  width: 100%;
   background: var(--gold);
   color: var(--parchment);
   border: 1px solid var(--gold);
   border-radius: 6px;
-  padding: 8px 18px;
+  padding: 11px 18px;
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   cursor: pointer;
 }
 .cc-onboard-next:hover { background: var(--oxblood-soft); border-color: var(--oxblood-soft); color: var(--ink); }
- 
-.cc-onboard-spotlight {
-  position: relative;
-  z-index: 9995;
-  border-radius: 10px;
-  box-shadow: 0 0 0 4px var(--gold), 0 0 50px rgba(201,184,150,0.55);
-}
- 
+
 .cc-replay-tour-btn {
   font-family: var(--font-mono);
   font-size: 10.5px;
@@ -793,7 +662,7 @@ Concord · HTML
   .cc-header { flex-direction: column; align-items: flex-start; gap: 6px; padding: 16px 16px 14px; }
   .cc-header-right { text-align: left; max-width: none; }
   .cc-title { font-size: 23px; }
- 
+
   .cc-layout { grid-template-columns: 1fr; }
   .cc-main { order: 1; padding: 18px 16px 24px; max-height: none; overflow-y: visible; }
   .cc-sidebar {
@@ -804,16 +673,16 @@ Concord · HTML
     padding: 18px 16px;
   }
   .cc-topsearch { padding: 12px 16px; }
- 
+
   #ccChipList { max-height: 200px; overflow-y: auto; border: 1px solid var(--line); border-radius: 8px; padding: 6px; }
- 
+
   .cc-verse-text { font-size: 21px; }
   .cc-thread-wrap { gap: 16px; }
   .cc-thread-svg-box { max-width: 100%; flex: 1 1 auto; }
   #ccThreadSvg { width: 100%; height: auto; max-width: 320px; display: block; }
- 
+
   .cc-explain-card { padding: 13px 15px; }
- 
+
   /* 16px min font-size on inputs prevents iOS Safari auto-zoom on focus */
   .cc-topsearch input,
   .cc-topsearch button,
@@ -821,21 +690,21 @@ Concord · HTML
   .cc-situation-btn,
   .cc-translation-select,
   .cc-path-step { font-size: 16px; }
- 
+
   /* comfortable tap targets */
   .cc-topsearch input, .cc-topsearch button, .cc-situation-btn, .cc-translation-select {
     min-height: 44px;
   }
 }
- 
+
 @media (max-width: 420px) {
   .cc-title { font-size: 20px; }
   .cc-verse-text { font-size: 19px; }
   .cc-explain-card p { font-size: 14px; }
 }
- 
+
 </style>
- 
+
 <div class="cc-root">
   <div class="cc-header">
     <div>
@@ -848,13 +717,13 @@ Concord · HTML
     </div>
     <div class="cc-header-right">EST. 2026<br/>guided by the word</div>
   </div>
- 
+
   <div class="cc-topsearch">
     <input id="ccSearchInput" type="text" maxlength="120" placeholder="Look up a verse — e.g. Romans 8:28" list="ccRefList" />
     <button id="ccSearchBtn">Go</button>
   </div>
   <datalist id="ccRefList"></datalist>
- 
+
   <div class="cc-layout">
     <div class="cc-sidebar">
       <div class="cc-situation-block">
@@ -865,33 +734,33 @@ Concord · HTML
         <div class="cc-situation-hint">Claude picks a starting passage and a short path through scripture for what you described.</div>
         <div id="ccPathTrack" class="cc-path-track"></div>
       </div>
- 
+
       <div class="cc-tabs" role="tablist">
         <button class="cc-tab active" data-tab="popular" role="tab" aria-selected="true">Popular</button>
         <button class="cc-tab" data-tab="history" role="tab" aria-selected="false">History</button>
         <button class="cc-tab" data-tab="about" role="tab" aria-selected="false">About</button>
       </div>
- 
+
       <div id="ccTabPanelPopular" class="cc-tab-panel active">
         <div id="ccChipList"></div>
       </div>
- 
+
       <div id="ccTabPanelHistory" class="cc-tab-panel">
         <div id="ccHistoryList" class="cc-history-list"></div>
         <button id="ccClearHistoryBtn" class="cc-clear-history-btn">Clear history</button>
       </div>
- 
+
       <div id="ccTabPanelAbout" class="cc-tab-panel">
         <p class="cc-about-text">
           <strong>Wayfinder</strong> is a Core Covenant tool for reading scripture the way a concordance and a study companion would — together. Curated verses carry verified text; everything else is fetched live from a full public-domain Bible. Every explanation is generated fresh, and cross-references are marked so you always know what's editorially verified versus AI-suggested.
         </p>
-        <button id="ccReplayTourBtn" class="cc-replay-tour-btn" type="button">Take the tour again</button>
+        <button id="ccReplayTourBtn" class="cc-replay-tour-btn" type="button">Show welcome message again</button>
         <p class="cc-about-text" style="margin-top:16px;">
           Not Who I Was. Who I'm Becoming.
         </p>
       </div>
     </div>
- 
+
     <div class="cc-main">
       <div class="cc-translation-row">
         <span class="cc-translation-label">Translation</span>
@@ -901,7 +770,7 @@ Concord · HTML
         </select>
       </div>
       <div id="ccVerseCard"></div>
- 
+
       <div class="cc-section-label">Thread Map</div>
       <div class="cc-thread-wrap">
         <div class="cc-thread-svg-box">
@@ -914,39 +783,38 @@ Concord · HTML
           <div class="cc-legend-row" style="margin-top:6px;">Click any node to follow the thread.</div>
         </div>
       </div>
- 
+
       <div class="cc-section-label">Explanation</div>
       <div id="ccExplanation"></div>
     </div>
   </div>
- 
+
   <div class="cc-footer">
     <span>Scripture: KJV, WEB (public domain) · Explanations generated by Claude</span>
     <span>© Core Covenant, EST. 2026 · <a href="/privacy.html">Privacy</a></span>
   </div>
 </div>
- 
+
 <div id="ccOnboardBackdrop" class="cc-onboard-backdrop">
   <div id="ccOnboardCard" class="cc-onboard-card">
-    <div id="ccOnboardTitle" class="cc-onboard-title"></div>
-    <div id="ccOnboardBody" class="cc-onboard-body"></div>
-    <div class="cc-onboard-footer">
-      <div id="ccOnboardDots" class="cc-onboard-dots"></div>
-      <div class="cc-onboard-actions">
-        <button id="ccOnboardSkip" class="cc-onboard-skip" type="button">Skip</button>
-        <button id="ccOnboardNext" class="cc-onboard-next" type="button">Next</button>
-      </div>
+    <img class="cc-onboard-logo" src="assets/logo-icon-gold.png" alt="Core Covenant" />
+    <div class="cc-onboard-title">Welcome to Wayfinder</div>
+    <div class="cc-onboard-body">
+      Search any verse to get its full text, curated cross-references, and an AI-generated explanation — or describe what's on your mind in "Start From How You're Feeling" and get a short guided path through scripture built around it.
+      <br/><br/>
+      On the Thread Map, solid gold lines are verified cross-references; dashed lines are AI-suggested or part of your personal guided path. Browse Popular passages, revisit History, or read more in About anytime.
     </div>
+    <button id="ccOnboardDismiss" class="cc-onboard-next" type="button">Got it — let's go</button>
   </div>
 </div>
- 
+
 <script>
 (function() {
   const TRANSLATIONS = {
     KJV: { name: 'King James Version', year: '1611' },
     WEB: { name: 'World English Bible', year: '2020' }
   };
- 
+
   const LIBRARY = {
     "Genesis 1:1": {
       translations: {
@@ -1198,7 +1066,7 @@ Concord · HTML
       refs: ["Isaiah 25:8", "Revelation 7:17", "1 Corinthians 15:26", "2 Corinthians 5:1"]
     }
   };
- 
+
   const POPULAR = Object.keys(LIBRARY);
   const chipList = document.getElementById('ccChipList');
   const refDatalist = document.getElementById('ccRefList');
@@ -1220,7 +1088,7 @@ Concord · HTML
   const historyList = document.getElementById('ccHistoryList');
   const clearHistoryBtn = document.getElementById('ccClearHistoryBtn');
   const situationCounter = document.getElementById('ccSituationCounter');
- 
+
   tabButtons.forEach(btn => {
     btn.addEventListener('click', () => {
       const target = btn.dataset.tab;
@@ -1235,11 +1103,11 @@ Concord · HTML
       if (target === 'history') renderHistoryTab();
     });
   });
- 
+
   // --- Local history (stored only in this browser, never sent to the server) ---
   const HISTORY_KEY = 'wayfinder_history';
   const HISTORY_MAX = 20;
- 
+
   function getHistory() {
     try {
       const raw = localStorage.getItem(HISTORY_KEY);
@@ -1248,7 +1116,7 @@ Concord · HTML
       return [];
     }
   }
- 
+
   function recordHistory(ref) {
     try {
       let list = getHistory().filter(item => item.ref !== ref);
@@ -1259,7 +1127,7 @@ Concord · HTML
       // localStorage unavailable (private browsing, etc.) — history just won't persist
     }
   }
- 
+
   function formatHistoryTime(ts) {
     const diffMs = Date.now() - ts;
     const mins = Math.floor(diffMs / 60000);
@@ -1269,7 +1137,7 @@ Concord · HTML
     if (hours < 24) return `${hours}h ago`;
     return `${Math.floor(hours / 24)}d ago`;
   }
- 
+
   function renderHistoryTab() {
     const list = getHistory();
     if (!list.length) {
@@ -1289,12 +1157,12 @@ Concord · HTML
       });
     });
   }
- 
+
   clearHistoryBtn.addEventListener('click', () => {
     try { localStorage.removeItem(HISTORY_KEY); } catch (e) {}
     renderHistoryTab();
   });
- 
+
   if (situationInput && situationCounter) {
     situationInput.addEventListener('input', () => {
       const len = situationInput.value.length;
@@ -1303,18 +1171,18 @@ Concord · HTML
       situationCounter.classList.toggle('near-limit', len >= max - 40);
     });
   }
- 
+
   let currentRef = null;
   let currentPath = null;      // [{ref, reason}, ...] when in situational mode
   let currentPathIndex = -1;
   let currentReasonBanner = null;
   let currentTranslation = 'KJV';
- 
+
   POPULAR.forEach(ref => {
     const opt = document.createElement('option');
     opt.value = ref;
     refDatalist.appendChild(opt);
- 
+
     const chip = document.createElement('button');
     chip.className = 'cc-chip';
     chip.textContent = ref;
@@ -1322,22 +1190,22 @@ Concord · HTML
     chip.addEventListener('click', () => { clearPath(); loadVerse(ref); });
     chipList.appendChild(chip);
   });
- 
+
   function findLibraryKey(input) {
     const clean = input.trim().toLowerCase();
     return POPULAR.find(k => k.toLowerCase() === clean) || null;
   }
- 
+
   function setActiveChip(ref) {
     document.querySelectorAll('.cc-chip').forEach(c => {
       c.classList.toggle('active', c.dataset.ref === ref);
     });
   }
- 
+
   function shareButtonHTML() {
     return `<button class="cc-share-btn" type="button">Share</button>`;
   }
- 
+
   function renderVerseCard(ref, entry) {
     const wanted = entry.translations[currentTranslation];
     let verseText, sourceLabel, fallbackNote = '';
@@ -1356,7 +1224,7 @@ Concord · HTML
       ${fallbackNote}
     `;
   }
- 
+
   function renderVerseCardLoading(ref) {
     verseCard.innerHTML = `
       <div class="cc-verse-tag">${ref}</div><br/>
@@ -1364,7 +1232,7 @@ Concord · HTML
       <div class="cc-verse-text" style="opacity:0.5;">Fetching from the full-Bible lookup…</div>
     `;
   }
- 
+
   function renderVerseCardLive(ref, data) {
     verseCard.innerHTML = `
       <div class="cc-verse-tag">${ref}</div> ${shareButtonHTML()}<br/>
@@ -1372,7 +1240,7 @@ Concord · HTML
       <div class="cc-verse-text">${data.text}</div>
     `;
   }
- 
+
   function renderVerseCardUnavailable(ref, message) {
     verseCard.innerHTML = `
       <div class="cc-verse-tag">${ref}</div> ${shareButtonHTML()}<br/>
@@ -1381,7 +1249,7 @@ Concord · HTML
       <div class="cc-verse-note">${message || 'The lookup service may be temporarily unavailable.'}</div>
     `;
   }
- 
+
   // Event delegation — verseCard's content is replaced wholesale on every render,
   // so a single listener on the stable parent handles all Share button clicks.
   verseCard.addEventListener('click', async (e) => {
@@ -1397,41 +1265,41 @@ Concord · HTML
       setTimeout(() => { e.target.textContent = 'Share'; }, 1500);
     }
   });
- 
+
   function polarPoint(cx, cy, r, angleDeg) {
     const rad = (angleDeg - 90) * Math.PI / 180;
     return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
   }
- 
+
   const KIND_STYLE = {
     curated: { color: 'var(--gold)', dash: '' },
     ai: { color: 'var(--oxblood-soft)', dash: 'stroke-dasharray="4 4"' },
     situational: { color: 'var(--sage)', dash: 'stroke-dasharray="2 4"' }
   };
- 
+
   // nodes: [{ref, kind}]
   function renderThreadMap(ref, nodes) {
     const cx = 180, cy = 180, r = 130;
     const n = Math.max(nodes.length, 1);
     let svgParts = [];
- 
+
     svgParts.push(`<circle cx="${cx}" cy="${cy}" r="9" fill="var(--oxblood)" />`);
     svgParts.push(`<text x="${cx}" y="${cy + 26}" text-anchor="middle" class="cc-node-label" font-weight="600">${ref}</text>`);
- 
+
     nodes.forEach((node, i) => {
       const angle = (360 / n) * i;
       const pt = polarPoint(cx, cy, r, angle);
       const midR = r * 0.55;
       const mid = polarPoint(cx, cy, midR, angle + (i % 2 === 0 ? 8 : -8));
       const style = KIND_STYLE[node.kind] || KIND_STYLE.curated;
- 
+
       svgParts.push(`<path class="cc-thread-path" d="M ${cx} ${cy} Q ${mid.x} ${mid.y} ${pt.x} ${pt.y}" stroke="${style.color}" stroke-width="1.6" ${style.dash} />`);
       svgParts.push(`<g class="cc-thread-node" data-ref="${node.ref}">
         <circle class="cc-node-circle" cx="${pt.x}" cy="${pt.y}" r="5.5" fill="${style.color}" />
         <text x="${pt.x}" y="${pt.y + (pt.y > cy ? 16 : -10)}" text-anchor="middle" class="cc-node-label">${node.ref}</text>
       </g>`);
     });
- 
+
     svg.innerHTML = svgParts.join('');
     svg.querySelectorAll('.cc-thread-node').forEach(g => {
       g.addEventListener('click', () => {
@@ -1445,16 +1313,16 @@ Concord · HTML
       });
     });
   }
- 
+
   function loadingHTML() {
     const banner = currentReasonBanner ? reasonBannerHTML(currentReasonBanner) : '';
     return `${banner}<div class="cc-loading"><span class="cc-dot"></span><span class="cc-dot"></span><span class="cc-dot"></span> Studying the passage…</div>`;
   }
- 
+
   function reasonBannerHTML(reason) {
     return `<div class="cc-reason-banner"><h4>Why this connects</h4><p>${reason}</p></div>`;
   }
- 
+
   function renderExplanation(data) {
     const banner = currentReasonBanner ? reasonBannerHTML(currentReasonBanner) : '';
     explanationEl.innerHTML = `
@@ -1466,7 +1334,7 @@ Concord · HTML
       </div>
     `;
   }
- 
+
   function renderPathTrack() {
     if (!currentPath) { pathTrack.innerHTML = ''; return; }
     pathTrack.innerHTML = currentPath.map((step, i) => `
@@ -1478,7 +1346,7 @@ Concord · HTML
       btn.addEventListener('click', () => goToPathStep(parseInt(btn.dataset.idx, 10)));
     });
   }
- 
+
   function goToPathStep(idx) {
     currentPathIndex = idx;
     const step = currentPath[idx];
@@ -1486,14 +1354,14 @@ Concord · HTML
     renderPathTrack();
     loadVerseCore(step.ref);
   }
- 
+
   function clearPath() {
     currentPath = null;
     currentPathIndex = -1;
     currentReasonBanner = null;
     pathTrack.innerHTML = '';
   }
- 
+
   async function fetchExplanation(ref, text, curatedRefs) {
     explanationEl.innerHTML = loadingHTML();
     try {
@@ -1507,7 +1375,7 @@ Concord · HTML
         throw new Error(errBody.error || `Server returned ${response.status}`);
       }
       const parsed = await response.json();
- 
+
       renderExplanation(parsed);
       const suggested = (parsed.suggestedRefs || []).map(s => s.ref).filter(Boolean).slice(0, 4);
       const nodes = [
@@ -1525,17 +1393,17 @@ Concord · HTML
       renderThreadMap(ref, nodes);
     }
   }
- 
+
   // Core loader — does not touch situational state (used by both plain lookup and path navigation)
   async function loadVerseCore(refInput) {
     const key = findLibraryKey(refInput);
     const entry = key ? LIBRARY[key] : null;
     const ref = key || refInput.trim();
- 
+
     currentRef = ref;
     searchInput.value = ref;
     setActiveChip(key || '');
- 
+
     if (entry) {
       const textForAi = entry.translations[currentTranslation] || entry.translations.KJV;
       renderVerseCard(ref, entry);
@@ -1544,7 +1412,7 @@ Concord · HTML
       recordHistory(ref);
       return;
     }
- 
+
     // Not in the curated 41 — try the full-Bible live lookup instead of giving up.
     renderVerseCardLoading(ref);
     renderThreadMap(ref, []);
@@ -1566,17 +1434,17 @@ Concord · HTML
       fetchExplanation(ref, null, []);
     }
   }
- 
+
   // Public loader for plain reference search — clears situational mode
   function loadVerse(refInput) {
     loadVerseCore(refInput);
   }
- 
+
   translationSelect.addEventListener('change', () => {
     currentTranslation = translationSelect.value;
     if (currentRef) loadVerseCore(currentRef);
   });
- 
+
   async function findStartingPoint(situationText) {
     situationBtn.disabled = true;
     situationBtn.textContent = 'Finding a starting point…';
@@ -1591,7 +1459,7 @@ Concord · HTML
         throw new Error(errBody.error || `Server returned ${response.status}`);
       }
       const parsed = await response.json();
- 
+
       currentPath = (parsed.path || []).filter(p => p.ref);
       if (!currentPath.length) throw new Error('No path returned');
       goToPathStep(0);
@@ -1602,7 +1470,7 @@ Concord · HTML
       situationBtn.textContent = 'Find where to start';
     }
   }
- 
+
   searchBtn.addEventListener('click', () => {
     if (searchInput.value.trim()) { clearPath(); loadVerse(searchInput.value.trim()); }
   });
@@ -1612,94 +1480,31 @@ Concord · HTML
   situationBtn.addEventListener('click', () => {
     if (situationInput.value.trim()) findStartingPoint(situationInput.value.trim());
   });
- 
-  // --- First-visit onboarding tour ---
+
+  // --- First-visit welcome popup ---
   const ONBOARD_KEY = 'wayfinder_onboarded';
-  const onboardSteps = [
-    {
-      selector: '.cc-topsearch',
-      title: 'Look Up Any Verse',
-      body: 'Type a reference like "Romans 8:28" and hit Go. Full text loads instantly for verified verses, or live from the whole Bible for anything else.'
-    },
-    {
-      selector: '.cc-situation-block',
-      title: "Or Start From How You're Feeling",
-      body: "Describe what's going on — stress, doubt, gratitude, anything — and Wayfinder builds a short guided path through scripture around it."
-    },
-    {
-      selector: '.cc-thread-wrap',
-      title: 'Follow The Thread',
-      body: 'Solid gold lines are curated cross-references. Dashed lines are AI-suggested or your personal guided path. Tap any node to jump there.'
-    },
-    {
-      selector: '.cc-tabs',
-      title: 'Explore More',
-      body: "Browse popular passages, revisit verses you've looked up in History, or read more in About — anytime."
-    }
-  ];
-  let onboardIndex = 0;
-  let onboardActiveEl = null;
- 
+
   const onboardBackdrop = document.getElementById('ccOnboardBackdrop');
-  const onboardTitleEl = document.getElementById('ccOnboardTitle');
-  const onboardBodyEl = document.getElementById('ccOnboardBody');
-  const onboardDotsEl = document.getElementById('ccOnboardDots');
-  const onboardNextBtn = document.getElementById('ccOnboardNext');
-  const onboardSkipBtn = document.getElementById('ccOnboardSkip');
+  const onboardDismissBtn = document.getElementById('ccOnboardDismiss');
   const replayTourBtn = document.getElementById('ccReplayTourBtn');
- 
-  function clearSpotlight() {
-    if (onboardActiveEl) {
-      onboardActiveEl.classList.remove('cc-onboard-spotlight');
-      onboardActiveEl = null;
-    }
-  }
- 
-  function showOnboardStep(i) {
-    clearSpotlight();
-    const step = onboardSteps[i];
-    const target = document.querySelector(step.selector);
-    if (target) {
-      target.classList.add('cc-onboard-spotlight');
-      onboardActiveEl = target;
-      target.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
-    onboardTitleEl.textContent = step.title;
-    onboardBodyEl.textContent = step.body;
-    onboardDotsEl.innerHTML = onboardSteps.map((_, idx) =>
-      `<span class="cc-onboard-dot ${idx === i ? 'active' : ''}"></span>`
-    ).join('');
-    onboardNextBtn.textContent = i === onboardSteps.length - 1 ? 'Got it' : 'Next';
-  }
- 
+
   function endOnboarding() {
-    clearSpotlight();
     onboardBackdrop.classList.remove('active');
     try { localStorage.setItem(ONBOARD_KEY, '1'); } catch (e) {}
   }
- 
+
   function startOnboarding() {
-    onboardIndex = 0;
     onboardBackdrop.classList.add('active');
-    showOnboardStep(onboardIndex);
   }
- 
-  onboardNextBtn.addEventListener('click', () => {
-    onboardIndex++;
-    if (onboardIndex >= onboardSteps.length) {
-      endOnboarding();
-    } else {
-      showOnboardStep(onboardIndex);
-    }
-  });
-  onboardSkipBtn.addEventListener('click', endOnboarding);
+
+  onboardDismissBtn.addEventListener('click', endOnboarding);
   onboardBackdrop.addEventListener('click', (e) => {
     if (e.target === onboardBackdrop) endOnboarding();
   });
   if (replayTourBtn) {
     replayTourBtn.addEventListener('click', startOnboarding);
   }
- 
+
   try {
     if (!localStorage.getItem(ONBOARD_KEY)) {
       setTimeout(startOnboarding, 700);
@@ -1707,13 +1512,12 @@ Concord · HTML
   } catch (e) {
     // localStorage unavailable — tour just won't auto-trigger, no functional loss
   }
- 
+
   const sharedRef = new URLSearchParams(location.search).get('ref');
   loadVerse(sharedRef && sharedRef.trim() ? sharedRef.trim() : "John 3:16");
 })();
 </script>
- 
+
 </div>
 </body>
 </html>
- 
