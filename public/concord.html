@@ -173,6 +173,18 @@
 .cc-tab-panel { display: none; }
 .cc-tab-panel.active { display: block; }
 
+.cc-intro-hint {
+  font-family: var(--font-body);
+  font-style: italic;
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  text-align: center;
+  padding: 10px 28px 0;
+}
+@media (max-width: 720px) {
+  .cc-intro-hint { padding: 10px 16px 0; font-size: 12px; }
+}
+
 .cc-topsearch {
   display: flex;
   gap: 8px;
@@ -718,6 +730,8 @@
     <div class="cc-header-right">EST. 2026<br/>guided by the word</div>
   </div>
 
+  <div class="cc-intro-hint">Search a verse, or tell us what's on your mind — either way, Wayfinder finds where to start.</div>
+
   <div class="cc-topsearch">
     <input id="ccSearchInput" type="text" maxlength="120" placeholder="Look up a verse — e.g. Romans 8:28" list="ccRefList" />
     <button id="ccSearchBtn">Go</button>
@@ -766,7 +780,7 @@
         <span class="cc-translation-label">Translation</span>
         <select id="ccTranslationSelect" class="cc-translation-select">
           <option value="KJV">King James Version (1611)</option>
-          <option value="WEB">World English Bible (2020)</option>
+          <option value="WEB" selected>World English Bible (2020)</option>
         </select>
       </div>
       <div id="ccVerseCard"></div>
@@ -825,7 +839,8 @@
     },
     "Psalm 23:1": {
       translations: {
-        KJV: "The LORD is my shepherd; I shall not want."
+        KJV: "The LORD is my shepherd; I shall not want.",
+        WEB: "Yahweh is my shepherd: I shall lack nothing."
       },
       refs: ["John 10:11", "Ezekiel 34:11-12", "Psalm 100:3", "Hebrews 13:20"]
     },
@@ -850,7 +865,8 @@
     },
     "Jeremiah 29:11": {
       translations: {
-        KJV: "For I know the thoughts that I think toward you, saith the LORD, thoughts of peace, and not of evil, to give you an expected end."
+        KJV: "For I know the thoughts that I think toward you, saith the LORD, thoughts of peace, and not of evil, to give you an expected end.",
+        WEB: "For I know the thoughts that I think toward you, says the LORD, thoughts of peace, and not of evil, to give you hope and a future."
       },
       refs: ["Romans 8:28", "Proverbs 16:9", "Psalm 139:16", "Ephesians 2:10"]
     },
@@ -869,7 +885,8 @@
     },
     "Romans 8:28": {
       translations: {
-        KJV: "And we know that all things work together for good to them that love God, to them who are the called according to his purpose."
+        KJV: "And we know that all things work together for good to them that love God, to them who are the called according to his purpose.",
+        WEB: "We know that all things work together for good for those who love God, to those who are called according to his purpose."
       },
       refs: ["Genesis 50:20", "Jeremiah 29:11", "James 1:2-4", "Philippians 1:6"]
     },
@@ -887,7 +904,8 @@
     },
     "Philippians 4:13": {
       translations: {
-        KJV: "I can do all things through Christ which strengtheneth me."
+        KJV: "I can do all things through Christ which strengtheneth me.",
+        WEB: "I can do all things through Christ, who strengthens me."
       },
       refs: ["2 Corinthians 12:9", "Isaiah 41:10", "Ephesians 3:16", "Psalm 18:32"]
     },
@@ -905,7 +923,8 @@
     },
     "Joshua 1:9": {
       translations: {
-        KJV: "Have not I commanded thee? Be strong and of a good courage; be not afraid, neither be thou dismayed: for the LORD thy God is with thee whithersoever thou goest."
+        KJV: "Have not I commanded thee? Be strong and of a good courage; be not afraid, neither be thou dismayed: for the LORD thy God is with thee whithersoever thou goest.",
+        WEB: "Haven't I commanded you? Be strong and courageous. Don't be afraid, neither be dismayed: for the LORD your God is with you wherever you go."
       },
       refs: ["Deuteronomy 31:6", "Isaiah 41:10", "Psalm 27:1", "2 Timothy 1:7"]
     },
@@ -947,7 +966,8 @@
     },
     "Isaiah 41:10": {
       translations: {
-        KJV: "Fear thou not; for I am with thee: be not dismayed; for I am thy God: I will strengthen thee; yea, I will help thee; yea, I will uphold thee with the right hand of my righteousness."
+        KJV: "Fear thou not; for I am with thee: be not dismayed; for I am thy God: I will strengthen thee; yea, I will help thee; yea, I will uphold thee with the right hand of my righteousness.",
+        WEB: "Don't you be afraid, for I am with you. Don't be dismayed, for I am your God. I will strengthen you. Yes, I will help you. Yes, I will uphold you with the right hand of my righteousness."
       },
       refs: ["Joshua 1:9", "Psalm 27:1", "Deuteronomy 31:6", "Philippians 4:13"]
     },
@@ -971,7 +991,8 @@
     },
     "Matthew 11:28": {
       translations: {
-        KJV: "Come unto me, all ye that labour and are heavy laden, and I will give you rest."
+        KJV: "Come unto me, all ye that labour and are heavy laden, and I will give you rest.",
+        WEB: "Come to me, all you who labor and are heavily burdened, and I will give you rest."
       },
       refs: ["Psalm 55:22", "1 Peter 5:7", "John 14:27", "2 Corinthians 12:9"]
     },
@@ -1031,7 +1052,8 @@
     },
     "Philippians 4:6-7": {
       translations: {
-        KJV: "Be careful for nothing; but in every thing by prayer and supplication with thanksgiving let your requests be made known unto God. And the peace of God, which passeth all understanding, shall keep your hearts and minds through Christ Jesus."
+        KJV: "Be careful for nothing; but in every thing by prayer and supplication with thanksgiving let your requests be made known unto God. And the peace of God, which passeth all understanding, shall keep your hearts and minds through Christ Jesus.",
+        WEB: "In nothing be anxious, but in everything, by prayer and petition with thanksgiving, let your requests be made known to God. And the peace of God, which surpasses all understanding, will guard your hearts and your thoughts in Christ Jesus."
       },
       refs: ["1 Peter 5:7", "John 14:27", "Matthew 6:34", "Psalm 55:22"]
     },
@@ -1176,7 +1198,7 @@
   let currentPath = null;      // [{ref, reason}, ...] when in situational mode
   let currentPathIndex = -1;
   let currentReasonBanner = null;
-  let currentTranslation = 'KJV';
+  let currentTranslation = 'WEB';
 
   POPULAR.forEach(ref => {
     const opt = document.createElement('option');
