@@ -55,6 +55,13 @@
 
 .cc-root * { box-sizing: border-box; }
 
+.cc-sticky-top {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: var(--parchment);
+}
+
 .cc-header {
   display: flex;
   align-items: baseline;
@@ -717,23 +724,25 @@
 </style>
 
 <div class="cc-root">
-  <div class="cc-header">
-    <div>
-      <div class="cc-eyebrow">Core Covenant</div>
-      <div class="cc-title">
-        <img class="cc-title-logo" src="assets/logo-icon-gold.png" alt="Core Covenant" />
-        Wayfinder
+  <div class="cc-sticky-top">
+    <div class="cc-header">
+      <div>
+        <div class="cc-eyebrow">Core Covenant</div>
+        <div class="cc-title">
+          <img class="cc-title-logo" src="assets/logo-icon-gold.png" alt="Core Covenant" />
+          Wayfinder
+        </div>
+        <div class="cc-tagline">Not Who I Was. Who I'm Becoming.</div>
       </div>
-      <div class="cc-tagline">Not Who I Was. Who I'm Becoming.</div>
+      <div class="cc-header-right">EST. 2026<br/>guided by the word</div>
     </div>
-    <div class="cc-header-right">EST. 2026<br/>guided by the word</div>
-  </div>
 
-  <div class="cc-intro-hint">Search a verse, or tell us what's on your mind — either way, Wayfinder finds where to start.</div>
+    <div class="cc-intro-hint">Search a verse, or tell us what's on your mind — either way, Wayfinder finds where to start.</div>
 
-  <div class="cc-topsearch">
-    <input id="ccSearchInput" type="text" maxlength="120" placeholder="Look up a verse — e.g. Romans 8:28" list="ccRefList" />
-    <button id="ccSearchBtn">Go</button>
+    <div class="cc-topsearch">
+      <input id="ccSearchInput" type="text" maxlength="120" placeholder="Look up a verse — e.g. Romans 8:28" list="ccRefList" />
+      <button id="ccSearchBtn">Go</button>
+    </div>
   </div>
   <datalist id="ccRefList"></datalist>
 
