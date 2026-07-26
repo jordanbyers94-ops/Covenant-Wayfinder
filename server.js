@@ -83,11 +83,10 @@ const EXPLANATION_CACHE_MAX = 500;
 
 app.post('/api/explain', aiLimiter, async (req, res) => {
   try {
-    if (!ANTHROPIC_API_KEY) return res.status(500).json({ error: 'Server is missing ANTHROPIC_API_KEY' });
-
     const { ref, text, curatedRefs = [] } = req.body || {};
     if (!ref) return res.status(400).json({ error: 'Missing "ref" in request body' });
     if (ref.length > 150) return res.status(400).json({ error: 'Reference is too long' });
+    if (!ANTHROPIC_API_KEY) return res.status(500).json({ error: 'Server is missing ANTHROPIC_API_KEY' });
 
     const cacheKey = ref.trim().toLowerCase();
     if (explanationCache.has(cacheKey)) {
@@ -130,8 +129,6 @@ const SITUATION_CACHE_MAX = 200;
 
 app.post('/api/situation', aiLimiter, async (req, res) => {
   try {
-    if (!ANTHROPIC_API_KEY) return res.status(500).json({ error: 'Server is missing ANTHROPIC_API_KEY' });
-
     const { situationText } = req.body || {};
     if (!situationText || !situationText.trim()) {
       return res.status(400).json({ error: 'Missing "situationText" in request body' });
@@ -139,6 +136,7 @@ app.post('/api/situation', aiLimiter, async (req, res) => {
     if (situationText.length > 600) {
       return res.status(400).json({ error: 'That description is too long — please keep it under 600 characters' });
     }
+    if (!ANTHROPIC_API_KEY) return res.status(500).json({ error: 'Server is missing ANTHROPIC_API_KEY' });
 
     const cacheKey = situationText.trim().toLowerCase();
     if (situationCache.has(cacheKey)) {
